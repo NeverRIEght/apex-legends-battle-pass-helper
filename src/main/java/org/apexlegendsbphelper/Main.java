@@ -1,15 +1,10 @@
 package org.apexlegendsbphelper;
 import static org.apexlegendsbphelper.ImageUtil.*;
 
-import net.sourceforge.tess4j.ITessAPI;
-import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.File;
-import javax.imageio.*;
 
 
 
