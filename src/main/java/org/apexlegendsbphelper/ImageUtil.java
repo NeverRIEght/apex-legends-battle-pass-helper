@@ -11,7 +11,7 @@ import java.io.File;
 import javax.imageio.*;
 
 public abstract class ImageUtil {
-    private String tesseractDatapath = "/opt/homebrew/Cellar/tesseract/5.3.3/share/tessdata/";
+    private String tesseractDatapath = "/Users/michaelkomarov/Documents/Java/apex-legends-battle-pass-helper/lib/tesseract/share/tessdata";
     private String tesseractSetLanguage = "eng+eng_old";
     int tesseractSetPageSegMode = 1;
     int tesseractSetOcrEngineMode = 1;
