@@ -48,6 +48,10 @@ public class Main {
         cropImageByPixels(grayscaleImage, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
         result = tesseract.doOCR(new File(folderPath + "tempimage.png"));
         System.out.println(result);
+
+        cropImageByPixels(grayscaleImage, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
+        result = tesseract.doOCR(new File(folderPath + "tempimage.png"));
+        System.out.println(result);
     }
 
     public static BufferedImage loadImage(String pathToImage) throws IOException {
@@ -96,9 +100,9 @@ public class Main {
     }
 
     public static int[] findFirstQuest (BufferedImage image) {
-        int[] firstQuestCoords = new int[8];
+        int[] firstQuestCoords = new int[12];
 
-        //Find the quest name from stratch
+        //Current quest name
         outerLoop:
         for(int i = 0; i < 50; i++) {
             for(int j = 0; j < 50; j++) {
@@ -118,23 +122,12 @@ public class Main {
         firstQuestCoords[6] = firstQuestCoords[0] + 300;
         firstQuestCoords[7] = firstQuestCoords[3] + 25;
 
-        //Next Quest name
-//        firstQuestCoords[4] = firstQuestCoords[0] + 30;
-//        firstQuestCoords[5] = firstQuestCoords[3] + 40;
-//        firstQuestCoords[6] = firstQuestCoords[0] + 300;
-//        firstQuestCoords[7] = firstQuestCoords[3] + 40 + 30;
+        //Stars for current quest
+        firstQuestCoords[8] = image.getWidth() - 120;
+        firstQuestCoords[9] = firstQuestCoords[1] + 18;
+        firstQuestCoords[10] = image.getWidth() - 60;
+        firstQuestCoords[11] =  firstQuestCoords[9] + 30;
 
-//        for(int i = firstQuestCoords[0] + 20; i < firstQuestCoords[0] + 200; i++) {
-//            for(int j = firstQuestCoords[3]; j < firstQuestCoords[3] + 28; j++) {
-//                if(image.getRGB(i, j) == -16777216) {
-//                    firstQuestCoords[0] = i;
-//                    firstQuestCoords[1] = j;
-//                    firstQuestCoords[2] = i + 800;
-//                    firstQuestCoords[3] = j + 32;
-//                    return firstQuestCoords;
-//                }
-//            }
-//        }
 
         return firstQuestCoords;
     }
