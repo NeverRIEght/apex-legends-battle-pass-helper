@@ -40,8 +40,7 @@ public class Main {
 
 
 
-        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-        tempImage = loadImage(tempImagePath);
+        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
         setImageThreshold(tempImage, tempImagePath, 95);
 
         String result = recogniseText(tempImagePath);
@@ -49,8 +48,7 @@ public class Main {
 
 
 
-        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
-        tempImage = loadImage(tempImagePath);
+        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
         setImageThreshold(tempImage, tempImagePath, 95);
 
         result = recogniseText(tempImagePath);
@@ -58,8 +56,7 @@ public class Main {
 
 
 
-        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
-        tempImage = loadImage(tempImagePath);
+        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
         setImageThreshold(tempImage, tempImagePath, 95);
 
         result = recogniseText(tempImagePath);
