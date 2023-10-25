@@ -1,6 +1,5 @@
 package org.apexlegendsbphelper;
 
-import org.apexlegendsbphelper.Legend;
 public class Quest {
     private int id;
     private String name;

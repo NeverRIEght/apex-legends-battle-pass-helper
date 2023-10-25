@@ -1,5 +1,5 @@
 package org.apexlegendsbphelper;
-
+import static org.apexlegendsbphelper.ImageUtil.*;
 
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
@@ -11,10 +11,13 @@ import java.io.IOException;
 import java.io.File;
 import javax.imageio.*;
 
+
+
 public class Main {
-    public static String imagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
     public static String folderPath;
+    public static String imagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
     public static String grayscaleImagePath;
+    public static String tempImagePath;
     public static void main(String[] args) throws TesseractException, IOException {
 
         int lastStop = imagePath.lastIndexOf('.');
@@ -25,129 +28,42 @@ public class Main {
         int lastSlash = imagePath.lastIndexOf('/');
         if (lastSlash >= 0) {
             folderPath = imagePath.substring(0, lastSlash) + "/";
+            tempImagePath = folderPath + "tempimage.png";
         }
 
         BufferedImage inputImage = loadImage(imagePath);
         BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
+        setImageThreshold(grayscaleImage, tempImagePath, 170);
+        BufferedImage tempImage = loadImage(tempImagePath);
+
+        int[] firstQuestCoords = findFirstQuest(tempImage);
 
 
-        setImageThreshold(grayscaleImage);
 
-        int[] firstQuestCoords = findFirstQuest(grayscaleImage);
+        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+        tempImage = loadImage(tempImagePath);
+        setImageThreshold(tempImage, tempImagePath, 95);
 
-        cropImageByPixels(grayscaleImage, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-        Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("/opt/homebrew/Cellar/tesseract/5.3.3/share/tessdata/");
-        tesseract.setLanguage("eng+eng_old");
-        tesseract.setPageSegMode(1);
-        tesseract.setOcrEngineMode(1);
-        tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
-        String result = tesseract.doOCR(new File(folderPath + "tempimage.png"));
+        String result = recogniseText(tempImagePath);
         System.out.println(result);
 
-        cropImageByPixels(grayscaleImage, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
-        result = tesseract.doOCR(new File(folderPath + "tempimage.png"));
+
+
+        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
+        tempImage = loadImage(tempImagePath);
+        setImageThreshold(tempImage, tempImagePath, 95);
+
+        result = recogniseText(tempImagePath);
         System.out.println(result);
 
-        cropImageByPixels(grayscaleImage, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
-        result = tesseract.doOCR(new File(folderPath + "tempimage.png"));
+
+
+        cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
+        tempImage = loadImage(tempImagePath);
+        setImageThreshold(tempImage, tempImagePath, 95);
+
+        result = recogniseText(tempImagePath);
         System.out.println(result);
     }
 
-    public static BufferedImage loadImage(String pathToImage) throws IOException {
-        return ImageIO.read(new File(pathToImage));
-    }
-
-    public static BufferedImage imageToGrayscale (BufferedImage image, String pathToGrayscale) throws IOException {
-        BufferedImage result;
-        try {
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-            BufferedImage grayscaleImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-            Graphics g = grayscaleImage.getGraphics();
-            g.drawImage(image, 0, 0, null);
-
-
-            ImageIO.write(grayscaleImage, "png", new File(pathToGrayscale));
-            result = grayscaleImage;
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = null;
-        }
-        return result;
-    }
-
-    public static BufferedImage setImageThreshold (BufferedImage image) throws IOException {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int threshold = 170;  // Пороговое значение для бинаризации
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = new Color(image.getRGB(x, y));
-                int grayscale = (int) (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue());
-
-                if (grayscale > threshold) {
-                    image.setRGB(x, y, Color.WHITE.getRGB());
-                } else {
-                    image.setRGB(x, y, Color.BLACK.getRGB());
-                }
-            }
-        }
-        ImageIO.write(image, "png", new File(grayscaleImagePath));
-        return image;
-    }
-
-    public static int[] findFirstQuest (BufferedImage image) {
-        int[] firstQuestCoords = new int[12];
-
-        //Current quest name
-        outerLoop:
-        for(int i = 0; i < 50; i++) {
-            for(int j = 0; j < 50; j++) {
-                if(image.getRGB(i, j) == -16777216) { // -16777216 = black; -1 = white
-                    firstQuestCoords[0] = i;
-                    firstQuestCoords[1] = j;
-                    firstQuestCoords[2] = i + 800;
-                    firstQuestCoords[3] = j + 32;
-                    break outerLoop;
-                }
-            }
-        }
-
-        //Current quest progress
-        firstQuestCoords[4] = firstQuestCoords[0] + 22;
-        firstQuestCoords[5] = firstQuestCoords[3] + 3;
-        firstQuestCoords[6] = firstQuestCoords[0] + 300;
-        firstQuestCoords[7] = firstQuestCoords[3] + 25;
-
-        //Stars for current quest
-        firstQuestCoords[8] = image.getWidth() - 120;
-        firstQuestCoords[9] = firstQuestCoords[1] + 18;
-        firstQuestCoords[10] = image.getWidth() - 60;
-        firstQuestCoords[11] =  firstQuestCoords[9] + 30;
-
-
-        return firstQuestCoords;
-    }
-
-    public static BufferedImage cropImageByPixels(BufferedImage image, int startX, int startY, int endX, int endY) throws IOException {
-        int width = endX - startX;
-        int height = endY - startY;
-
-        BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int sourceX = x + startX;
-                int sourceY = y + startY;
-
-                int rgb = image.getRGB(sourceX, sourceY);
-                croppedImage.setRGB(x, y, rgb);
-            }
-        }
-        ImageIO.write(croppedImage, "png", new File(folderPath + "tempimage.png"));
-        return croppedImage;
-    }
 }
