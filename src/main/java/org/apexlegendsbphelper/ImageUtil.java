@@ -11,10 +11,10 @@ import java.io.File;
 import javax.imageio.*;
 
 public abstract class ImageUtil {
-    private String tesseractDatapath = "/Users/michaelkomarov/Documents/Java/apex-legends-battle-pass-helper/lib/tesseract/share/tessdata";
-    private String tesseractSetLanguage = "eng+eng_old";
-    int tesseractSetPageSegMode = 1;
-    int tesseractSetOcrEngineMode = 1;
+    private static final String tesseractDatapath = "/Users/michaelkomarov/Documents/Java/apex-legends-battle-pass-helper/lib/tesseract/share/tessdata";
+    private static final String tesseractSetLanguage = "eng+eng_old";
+    static int tesseractSetPageSegMode = 1;
+    static int tesseractSetOcrEngineMode = 1;
     public static BufferedImage loadImage(String pathToImage) throws IOException {
         return ImageIO.read(new File(pathToImage));
     }
@@ -113,10 +113,10 @@ public abstract class ImageUtil {
 
     public static String recogniseText(String pathToImage) throws TesseractException {
         Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath("/opt/homebrew/Cellar/tesseract/5.3.3/share/tessdata/");
-        tesseract.setLanguage("eng+eng_old");
-        tesseract.setPageSegMode(1);
-        tesseract.setOcrEngineMode(1);
+        tesseract.setDatapath(tesseractDatapath);
+        tesseract.setLanguage(tesseractSetLanguage);
+        tesseract.setPageSegMode(tesseractSetPageSegMode);
+        tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
         tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
 
         return tesseract.doOCR(new File(pathToImage));
