@@ -37,28 +37,62 @@ public class Main {
 
         int[] firstQuestCoords = findFirstQuest(tempImage);
 
+        int i = 0;
+        while(i < firstQuestCoords.length) {
+            System.out.println(firstQuestCoords[i]);
+            i++;
+        }
 
-        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-        setImageThreshold(tempImage, tempImagePath, 95);
+        try {
+            i = 0;
+            while (i < 1000) {
+                tempImage = cropImageByPixels(inputImage, folderPath + "tempimage" + i + ".png", firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+//                firstQuestCoords[0]++;
+//                firstQuestCoords[1]++;
+//                firstQuestCoords[2]++;
+//                firstQuestCoords[3]++;
+                i++;
+            }
+        } catch (Exception ex) {
 
-        String result = recogniseText(tempImagePath);
-        System.out.println(result);
+        }
+        //tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
 
 
 
-        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
-        setImageThreshold(tempImage, tempImagePath, 95);
-
-        result = recogniseText(tempImagePath);
-        System.out.println(result);
 
 
 
-        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
-        setImageThreshold(tempImage, tempImagePath, 95);
 
-        result = recogniseText(tempImagePath);
-        System.out.println(result);
+
+
+
+
+
+
+
+
+//        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+//        setImageThreshold(tempImage, tempImagePath, 95);
+//
+//        String result = recogniseText(tempImagePath);
+//        System.out.println(result);
+//
+//
+//
+//        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[4], firstQuestCoords[5], firstQuestCoords[6], firstQuestCoords[7]);
+//        setImageThreshold(tempImage, tempImagePath, 95);
+//
+//        result = recogniseText(tempImagePath);
+//        System.out.println(result);
+//
+//
+//
+//        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[8], firstQuestCoords[9], firstQuestCoords[10], firstQuestCoords[11]);
+//        setImageThreshold(tempImage, tempImagePath, 95);
+//
+//        result = recogniseText(tempImagePath);
+//        System.out.println(result);
 
         // Считать существующую БД, если она есть
         // Запросить картинку / несколько картинок у пользователя / узнать нужны ли они

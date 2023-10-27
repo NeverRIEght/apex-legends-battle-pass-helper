@@ -62,34 +62,62 @@ public abstract class ImageUtil {
     }
 
     public static int[] findFirstQuest (BufferedImage image) {
-        int[] firstQuestCoords = new int[12];
+//        int[] firstQuestCoords = new int[12];
+//
+//        //Current quest name
+//        outerLoop:
+//        for(int i = 0; i < 50; i++) {
+//            for(int j = 0; j < 50; j++) {
+//                if(image.getRGB(i, j) == -16777216) { // -16777216 = black; -1 = white
+//                    firstQuestCoords[0] = i;
+//                    firstQuestCoords[1] = j;
+//                    firstQuestCoords[2] = i + 800;
+//                    firstQuestCoords[3] = j + 32;
+//                    break outerLoop;
+//                }
+//            }
+//        }
+//
+//        //Current quest progress
+//        firstQuestCoords[4] = firstQuestCoords[0] + 22;
+//        firstQuestCoords[5] = firstQuestCoords[3] + 3;
+//        firstQuestCoords[6] = firstQuestCoords[0] + 300;
+//        firstQuestCoords[7] = firstQuestCoords[3] + 25;
+//
+//        //Stars for current quest
+//        firstQuestCoords[8] = image.getWidth() - 120;
+//        firstQuestCoords[9] = firstQuestCoords[1] + 18;
+//        firstQuestCoords[10] = image.getWidth() - 60;
+//        firstQuestCoords[11] =  firstQuestCoords[9] + 30;
+//
+//
+//        return firstQuestCoords;
 
-        //Current quest name
+
+        int[] firstQuestCoords = {0, 0, 0, 0};
+
         outerLoop:
         for(int i = 0; i < 50; i++) {
             for(int j = 0; j < 50; j++) {
                 if(image.getRGB(i, j) == -16777216) { // -16777216 = black; -1 = white
                     firstQuestCoords[0] = i;
                     firstQuestCoords[1] = j;
-                    firstQuestCoords[2] = i + 800;
-                    firstQuestCoords[3] = j + 32;
                     break outerLoop;
                 }
             }
         }
 
-        //Current quest progress
-        firstQuestCoords[4] = firstQuestCoords[0] + 22;
-        firstQuestCoords[5] = firstQuestCoords[3] + 3;
-        firstQuestCoords[6] = firstQuestCoords[0] + 300;
-        firstQuestCoords[7] = firstQuestCoords[3] + 25;
 
-        //Stars for current quest
-        firstQuestCoords[8] = image.getWidth() - 120;
-        firstQuestCoords[9] = firstQuestCoords[1] + 18;
-        firstQuestCoords[10] = image.getWidth() - 60;
-        firstQuestCoords[11] =  firstQuestCoords[9] + 30;
-
+        //????
+        for(int j = firstQuestCoords[1]; j < 100; j++) {
+            if(image.getRGB(firstQuestCoords[0], j) == -1) { // -16777216 = black; -1 = white
+                firstQuestCoords[3] = j - 5;
+            }
+        }
+        //????
+        if(firstQuestCoords[0] != 0 && firstQuestCoords[1] != 0 && firstQuestCoords[3] != 0) {
+            firstQuestCoords[2] = firstQuestCoords[0] + 990;
+        }
 
         return firstQuestCoords;
     }
