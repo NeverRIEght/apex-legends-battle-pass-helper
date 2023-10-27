@@ -14,8 +14,8 @@ public class Main {
     public static String inputImagePath = "C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png";
     public static String inputImageFolderPath;
     public static String tempFolderPath;
-    public static String grayscaleImagePath;
     public static String tempImagePath;
+    public static String grayscaleImagePath;
     public static void main(String[] args) throws TesseractException, IOException {
 
 
@@ -30,9 +30,8 @@ public class Main {
             }
         }
 
-        grayscaleImagePath = tempFolderPath + "input_grayscale.png";
-        tempImagePath = tempFolderPath + "tempimage.png";
-
+        grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
+        tempImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
 
         // Create a recognition-essential version of input image
 
@@ -61,17 +60,15 @@ public class Main {
         while (i < questsCount + 1) {
 
 
-            // Crop the the main image and save it as tmp/tempimageN.png
+            // Crop the main image and save it as tmp/tempimageN.png
 
-            cropImageByPixels(inputImage, inputImageFolderPath + "tempimage" + i + ".png",
+            cropImageByPixels(inputImage, tempFolderPath + File.separator + "tempimage" + i + ".png",
                               firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
 
             // Create an object, which will define current quest as an object
 
-            QuestUtil currentQuest = new QuestUtil(loadImage(inputImageFolderPath + "tempimage" + i + ".png"),
+            QuestUtil currentQuest = new QuestUtil(loadImage(tempFolderPath + File.separator + "tempimage" + i + ".png"),
                     1, firstQuestCoords);
-
-
 
 
             firstQuestCoords[1] += heightIncrement;
@@ -83,11 +80,11 @@ public class Main {
 
 
 
-        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-        setImageThreshold(tempImage, tempImagePath, 95);
-
-        String result = recogniseText(tempImagePath);
-        System.out.println(result);
+//        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+//        setImageThreshold(tempImage, tempImagePath, 95);
+//
+//        String result = recogniseText(tempImagePath);
+//        System.out.println(result);
 
 
 
