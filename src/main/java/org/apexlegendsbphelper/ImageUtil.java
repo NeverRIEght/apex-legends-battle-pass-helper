@@ -142,6 +142,32 @@ public abstract class ImageUtil {
         return croppedImage;
     }
 
+    public static BufferedImage cropImageByPixels(BufferedImage image, String outputImagePath, int[] coords) throws IOException {
+
+        int startX = coords[0];
+        int startY = coords[1];
+        int endX = coords[2];
+        int endY = coords[3];
+
+
+        int width = endX - startX;
+        int height = endY - startY;
+
+        BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int sourceX = x + startX;
+                int sourceY = y + startY;
+
+                int rgb = image.getRGB(sourceX, sourceY);
+                croppedImage.setRGB(x, y, rgb);
+            }
+        }
+        ImageIO.write(croppedImage, "png", new File(outputImagePath));
+        return croppedImage;
+    }
+
     public static String recogniseText(String pathToImage) throws TesseractException {
         Tesseract tesseract = new Tesseract();
         tesseract.setDatapath(tesseractDatapath);

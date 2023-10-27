@@ -59,8 +59,21 @@ public class Main {
 
         int i = 0;
         while (i < questsCount + 1) {
+
+
+            // Crop the the main image and save it as tmp/tempimageN.png
+
             cropImageByPixels(inputImage, inputImageFolderPath + "tempimage" + i + ".png",
                               firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+
+            // Create an object, which will define current quest as an object
+
+            QuestUtil currentQuest = new QuestUtil(loadImage(inputImageFolderPath + "tempimage" + i + ".png"),
+                    1, firstQuestCoords);
+
+
+
+
             firstQuestCoords[1] += heightIncrement;
             firstQuestCoords[3] += heightIncrement;
             i++;
@@ -70,6 +83,11 @@ public class Main {
 
 
 
+        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+        setImageThreshold(tempImage, tempImagePath, 95);
+
+        String result = recogniseText(tempImagePath);
+        System.out.println(result);
 
 
 
@@ -80,11 +98,9 @@ public class Main {
 
 
 
-//        tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-//        setImageThreshold(tempImage, tempImagePath, 95);
-//
-//        String result = recogniseText(tempImagePath);
-//        System.out.println(result);
+
+
+
 //
 //
 //
