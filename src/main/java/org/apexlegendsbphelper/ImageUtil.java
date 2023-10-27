@@ -108,13 +108,14 @@ public abstract class ImageUtil {
         }
 
 
-        //????
+
         for(int j = firstQuestCoords[1]; j < 100; j++) {
             if(image.getRGB(firstQuestCoords[0], j) == -1) { // -16777216 = black; -1 = white
-                firstQuestCoords[3] = j - 5;
+                firstQuestCoords[3] = j;
+                break;
             }
         }
-        //????
+
         if(firstQuestCoords[0] != 0 && firstQuestCoords[1] != 0 && firstQuestCoords[3] != 0) {
             firstQuestCoords[2] = firstQuestCoords[0] + 990;
         }

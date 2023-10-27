@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Main {
     public static String folderPath;
-    public static String imagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
+    public static String imagePath = "C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png";
     public static String grayscaleImagePath;
     public static String tempImagePath;
     public static void main(String[] args) throws TesseractException, IOException {
@@ -25,9 +25,6 @@ public class Main {
         if (lastSlash >= 0) {
             folderPath = imagePath.substring(0, lastSlash) + File.separator;
             tempImagePath = folderPath + "tempimage.png";
-            System.out.println(folderPath + "; " + lastSlash + "; " + tempImagePath);
-        } else {
-            System.out.println(folderPath + "; " + lastSlash + "; " + tempImagePath);
         }
 
         BufferedImage inputImage = loadImage(imagePath);
@@ -37,25 +34,21 @@ public class Main {
 
         int[] firstQuestCoords = findFirstQuest(tempImage);
 
+
+        int remainingHeight = inputImage.getHeight() - firstQuestCoords[1];
+        int questsCount = remainingHeight / ((firstQuestCoords[3] - firstQuestCoords[1]) + 6);
+
+        int heightIncrement = (firstQuestCoords[3] - firstQuestCoords[1]) + 6;
+
         int i = 0;
-        while(i < firstQuestCoords.length) {
-            System.out.println(firstQuestCoords[i]);
+        while (i < questsCount + 1) {
+            cropImageByPixels(inputImage, folderPath + "tempimage" + i + ".png", firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+            System.out.println("i = " + i + "; firstQuestCoords[1] = " + firstQuestCoords[1] + "; firstQuestCoords[3] = " + firstQuestCoords[3]);
+            firstQuestCoords[1] += heightIncrement;
+            firstQuestCoords[3] += heightIncrement;
             i++;
         }
-
-        try {
-            i = 0;
-            while (i < 1000) {
-                tempImage = cropImageByPixels(inputImage, folderPath + "tempimage" + i + ".png", firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-//                firstQuestCoords[0]++;
-//                firstQuestCoords[1]++;
-//                firstQuestCoords[2]++;
-//                firstQuestCoords[3]++;
-                i++;
-            }
-        } catch (Exception ex) {
-
-        }
+        System.out.println(inputImage.getHeight());
         //tempImage = cropImageByPixels(inputImage, tempImagePath, firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
 
 
