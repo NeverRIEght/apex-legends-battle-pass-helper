@@ -18,8 +18,11 @@ public class Main {
     public static String tempImagePath;
     public static void main(String[] args) throws TesseractException, IOException {
 
-        inputImageFolderPath = new File("C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png").getParentFile().toString();
-        tempFolderPath = new File("C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png").getParentFile().toString() + File.separator + "tmp";
+
+        // Create and write path`s to directories
+
+        inputImageFolderPath = new File(inputImagePath).getParentFile().toString();
+        tempFolderPath = new File(inputImagePath).getParentFile().toString() + File.separator + "tmp";
 
         if (!new File(tempFolderPath).exists()) {
             if (!new File(tempFolderPath).mkdirs()) {
@@ -30,29 +33,38 @@ public class Main {
         grayscaleImagePath = tempFolderPath + "input_grayscale.png";
         tempImagePath = tempFolderPath + "tempimage.png";
 
-//
-//        BufferedImage inputImage = loadImage(inputImagePath);
-//        BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
-//        setImageThreshold(grayscaleImage, tempImagePath, 170);
-//        BufferedImage tempImage = loadImage(tempImagePath);
-//
-//        int[] firstQuestCoords = findFirstQuest(tempImage);
-//
-//
-//        int remainingHeight = inputImage.getHeight() - firstQuestCoords[1];
-//        int questsCount = remainingHeight / ((firstQuestCoords[3] - firstQuestCoords[1]) + 6);
-//
-//        int heightIncrement = (firstQuestCoords[3] - firstQuestCoords[1]) + 6;
-//
-//        int i = 0;
-//        while (i < questsCount + 1) {
-//            cropImageByPixels(inputImage, inputImageFolderPath + "tempimage" + i + ".png", firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
-//            System.out.println("i = " + i + "; firstQuestCoords[1] = " + firstQuestCoords[1] + "; firstQuestCoords[3] = " + firstQuestCoords[3]);
-//            firstQuestCoords[1] += heightIncrement;
-//            firstQuestCoords[3] += heightIncrement;
-//            i++;
-//        }
-//        System.out.println(inputImage.getHeight());
+
+        // Create a recognition-essential version of input image
+
+        BufferedImage inputImage = loadImage(inputImagePath);
+        BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
+        setImageThreshold(grayscaleImage, tempImagePath, 170);
+        BufferedImage tempImage = loadImage(tempImagePath);
+
+
+        // Calculate the first quest borders
+
+        int[] firstQuestCoords = findFirstQuest(tempImage);
+
+
+        // Calculate the total amount of quest on the image
+
+        int remainingHeight = inputImage.getHeight() - firstQuestCoords[1];
+        int questsCount = remainingHeight / ((firstQuestCoords[3] - firstQuestCoords[1]) + 6);
+
+
+        // Crop quests from the main image and save it as tmp/tempimageN.png
+
+        int heightIncrement = (firstQuestCoords[3] - firstQuestCoords[1]) + 6;
+
+        int i = 0;
+        while (i < questsCount + 1) {
+            cropImageByPixels(inputImage, inputImageFolderPath + "tempimage" + i + ".png",
+                              firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+            firstQuestCoords[1] += heightIncrement;
+            firstQuestCoords[3] += heightIncrement;
+            i++;
+        }
 
 
 
