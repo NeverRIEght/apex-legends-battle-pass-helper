@@ -178,4 +178,31 @@ public abstract class ImageUtil {
 
         return tesseract.doOCR(new File(pathToImage));
     }
+
+    public static boolean imageIsOR(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int ORCounter = 0;
+        boolean ifOR = false;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (image.getRGB(x, y) == -1) {
+                    int whitePixelCount = 0;
+                    for (int j = x + 1; j < width; j++) {
+                        if (image.getRGB(j, y) == -1) {
+                            whitePixelCount++;
+                        } else {
+                            break;
+                        }
+                        if (whitePixelCount == 9) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
