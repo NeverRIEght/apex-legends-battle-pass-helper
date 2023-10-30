@@ -9,9 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 
-
 public class Main {
-    public static String inputImagePath = "C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png";
+    public static String inputImagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
     public static String inputImageFolderPath;
     public static String tempFolderPath;
     public static String tempImagePath;
@@ -56,8 +55,7 @@ public class Main {
 
         int heightIncrement = (firstQuestCoords[3] - firstQuestCoords[1]) + 6;
 
-        int i = 0;
-        while (i < questsCount + 1) {
+        for (int i = 0; i < questsCount + 1; i++) {
 
 
             // Crop the main image and save it as tmp/tempimageN.png
@@ -67,13 +65,34 @@ public class Main {
 
             // Create an object, which will define current quest as an object
 
-            QuestUtil currentQuest = new QuestUtil(loadImage(tempFolderPath + File.separator + "tempimage" + i + ".png"),
-                    1, firstQuestCoords);
-
+//            QuestUtil currentQuest = new QuestUtil(loadImage(tempFolderPath + File.separator + "tempimage" + i + ".png"),
+//                    1, firstQuestCoords);
 
             firstQuestCoords[1] += heightIncrement;
             firstQuestCoords[3] += heightIncrement;
-            i++;
+        }
+
+
+        // Import and proceed every image in /tmp
+
+        File tmpDirectory = new File(tempFolderPath);
+        File[] tmpImages = tmpDirectory.listFiles();
+
+        if (tmpImages != null) {
+            for (int i = 0; i < tmpImages.length; i++) {
+                if (tmpImages[i].isFile() && (!tmpImages[i].getName().toLowerCase().endsWith("_grayscale.png")) && (!tmpImages[i].getName().toLowerCase().endsWith("_blackwhite.png"))) {
+                    try {
+                        BufferedImage buffImage = ImageIO.read(tmpImages[i]);
+
+                        BufferedImage orImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tempimage" + i + "OR.png", 385, 0, 470, 65);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            System.err.println("Директория не существует или не является директорией.");
         }
 
 
@@ -115,16 +134,16 @@ public class Main {
 //        result = recogniseText(tempImagePath);
 //        System.out.println(result);
 
-        // Считать существующую БД, если она есть
-        // Запросить картинку / несколько картинок у пользователя / узнать нужны ли они
-        // Определение количества квестов на картинке
-        // Определение точных границ первого квеста
-        // Определение наличия OR. Если OR нету, то определить ещё BR/NBR. Если есть - тоже определить наличие BR/NBR
-        // Определение отступа и создание массива нарезанных квестов для распознавания
-        // Для каждого квеста: нарезать на составные части в зависимости от режимов и OR, распознать текст
-        // Записать полученное по классам
-        // Записать классы в БД
-        // Сохранить файл БД
+//         Считать существующую БД, если она есть
+//         Запросить картинку / несколько картинок у пользователя / узнать нужны ли они
+//         Определение количества квестов на картинке
+//         Определение точных границ первого квеста
+//         Определение наличия OR. Если OR нету, то определить ещё BR/NBR. Если есть - тоже определить наличие BR/NBR
+//         Определение отступа и создание массива нарезанных квестов для распознавания
+//         Для каждого квеста: нарезать на составные части в зависимости от режимов и OR, распознать текст
+//         Записать полученное по классам
+//         Записать классы в БД
+//         Сохранить файл БД
     }
 
 }
