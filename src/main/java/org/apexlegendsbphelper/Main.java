@@ -5,6 +5,7 @@ import static org.apexlegendsbphelper.ImageUtil.*;
 import net.sourceforge.tess4j.TesseractException;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -98,10 +99,38 @@ public class Main {
 
                 BufferedImage orImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 400, 0, 470, 64);
 
-//                imageToBlackWhite(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 120);
-//                System.out.println(recogniseText(tempFolderPath + File.separator + "tmpOR" + File.separator + newName));
+                imageToGrayscale(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName);
+                imageToBlackWhite(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 120);
 
+                int width = orImage.getWidth();
+                int height = orImage.getHeight();
+                int ORCounter = 0;
+                boolean ifOR = false;
 
+                System.out.println(tmpImages[i].getName());
+
+                OutOfLoops:
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        if (orImage.getRGB(x, y) == -1) {
+                            int whitePixelCount = 0;
+                            for (int j = x + 1; j < width; j++) {
+                                if (orImage.getRGB(j, y) == -1) {
+                                    whitePixelCount++;
+                                } else {
+                                    break;
+                                }
+                                if (whitePixelCount == 9) {
+                                    System.out.println((j - 9) + ":" + y);
+                                    ifOR = true;
+                                    break OutOfLoops;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                System.out.println("ifOR: " + ifOR);
             }
         }
 
