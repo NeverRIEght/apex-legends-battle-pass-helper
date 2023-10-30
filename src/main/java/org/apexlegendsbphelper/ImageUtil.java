@@ -41,7 +41,7 @@ public abstract class ImageUtil {
         return result;
     }
 
-    public static BufferedImage setImageThreshold (BufferedImage image, String outputPath, int threshold) throws IOException {
+    public static BufferedImage imageToBlackWhite(BufferedImage image, String outputPath, int threshold) throws IOException {
         int width = image.getWidth();
         int height = image.getHeight();
 

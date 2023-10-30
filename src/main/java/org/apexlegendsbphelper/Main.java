@@ -1,4 +1,5 @@
 package org.apexlegendsbphelper;
+import static org.apexlegendsbphelper.FileUtil.*;
 import static org.apexlegendsbphelper.ImageUtil.*;
 
 import net.sourceforge.tess4j.TesseractException;
@@ -22,18 +23,21 @@ public class Main {
 
         inputImageFolderPath = new File(inputImagePath).getParentFile().toString();
         tempFolderPath = new File(inputImagePath).getParentFile().toString() + File.separator + "tmp";
-        if (new File(tempFolderPath).exists()) {
-            File tmpDirectory = new File(tempFolderPath);
-            File[] tmpImages = tmpDirectory.listFiles();
 
-            for (int i = 0; i < tmpImages.length; i++) {
-                if (tmpImages[i].isFile()) {
-                    tmpImages[i].delete();
-                }
-            }
+        if (new File(tempFolderPath).exists()) {
+            deleteDirectory(new File(tempFolderPath));
+            new File(tempFolderPath).mkdirs();
+            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
         } else {
             new File(tempFolderPath).mkdirs();
+            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
         }
+
+
 
         grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
         tempImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
@@ -42,7 +46,7 @@ public class Main {
 
         BufferedImage inputImage = loadImage(inputImagePath);
         BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
-        setImageThreshold(grayscaleImage, tempImagePath, 170);
+        imageToBlackWhite(grayscaleImage, tempImagePath, 170);
         BufferedImage tempImage = loadImage(tempImagePath);
 
 
@@ -81,25 +85,25 @@ public class Main {
 
         // Import and proceed every image in /tmp
 
-//        File tmpDirectory = new File(tempFolderPath);
-//        File[] tmpImages = tmpDirectory.listFiles();
-//
-//        if (tmpImages != null) {
-//            for (int i = 0; i < tmpImages.length; i++) {
-//                if (tmpImages[i].isFile() && (!tmpImages[i].getName().toLowerCase().endsWith("_grayscale.png")) && (!tmpImages[i].getName().toLowerCase().endsWith("_blackwhite.png"))) {
-//                    try {
-//                        BufferedImage buffImage = ImageIO.read(tmpImages[i]);
-//
-//                        BufferedImage orImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tempimage" + i + "OR.png", 385, 0, 470, 65);
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        } else {
-//            System.err.println("Директория не существует или не является директорией.");
-//        }
+        File tmpDirectory = new File(tempFolderPath);
+        File[] tmpImages = tmpDirectory.listFiles();
+        for (int i = 0; i < tmpImages.length; i++) {
+            if (tmpImages[i].isFile() && (!tmpImages[i].getName().equals("input_grayscale.png") && (!tmpImages[i].getName().equals("input_blackwhite.png")))) {
+
+                BufferedImage buffImage = ImageIO.read(tmpImages[i]);
+
+                int lastDotIndex = tmpImages[i].getName().lastIndexOf(".");
+                String imgNumber = tmpImages[i].getName().substring(lastDotIndex - 1, lastDotIndex);
+                String newName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpOR.png";
+
+                BufferedImage orImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 400, 0, 470, 64);
+
+//                imageToBlackWhite(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 120);
+//                System.out.println(recogniseText(tempFolderPath + File.separator + "tmpOR" + File.separator + newName));
+
+
+            }
+        }
 
 
 
