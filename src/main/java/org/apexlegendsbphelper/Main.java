@@ -72,8 +72,10 @@ public class Main {
 
                     // Crop the main image and save it as tmp/tempimageN.png
 
-                    cropImageByPixels(inputImage, tempFolderPath + File.separator + "tempimage" + i + ".png",
-                            firstQuestCoords[0], firstQuestCoords[1], firstQuestCoords[2], firstQuestCoords[3]);
+                    cropImageByPixels(inputImage, tempFolderPath + File.separator
+                                    + "tempimage" + i + ".png",
+                                      firstQuestCoords[0], firstQuestCoords[1],
+                                      firstQuestCoords[2], firstQuestCoords[3]);
 
                     firstQuestCoords[1] += heightIncrement;
                     firstQuestCoords[3] += heightIncrement;
@@ -111,6 +113,7 @@ public class Main {
                         currQuest.setHasNBR(checkForNBROption(currentImage));
 
 
+                        // Recognise quest name
 
                         newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_BR.png";
 
@@ -149,13 +152,38 @@ public class Main {
                             currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
                         }
 
+
+                        // Recognise quest progress
+
+                        newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpPr_BR.png";
+                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 24, 34, 400, 60);
+
+                        currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName);
+                        currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 180);
+
+                        //System.out.println(recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName));
+
+
+                        // Recognise quest reward
+
+                        newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpRe_BR.png";
+                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, buffImage.getWidth() - 100, 0, buffImage.getWidth() - 60, 60);
+
+                        currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName);
+                        currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, 170);
+
+                        //System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName).trim() + "\"");
+
+
+                        // Print Quest
+
                         //currQuest.setName(correctSentence(currQuest.getName(), System.getProperty("user.dir") + File.separator + "data" + File.separator + "tessvocabulary.txt"));
 
-                        System.out.println(String.format("Quest name: %s", currQuest.getName()));
-                        System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
-                        System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
-                        System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
-                        System.out.println("---------------");
+//                        System.out.println(String.format("Quest name: %s", currQuest.getName()));
+//                        System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
+//                        System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
+//                        System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
+//                        System.out.println("---------------");
                     }
                 }
             }
