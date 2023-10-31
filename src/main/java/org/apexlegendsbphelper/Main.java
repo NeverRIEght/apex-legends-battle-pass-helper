@@ -1,6 +1,7 @@
 package org.apexlegendsbphelper;
 import static org.apexlegendsbphelper.FileUtil.*;
 import static org.apexlegendsbphelper.ImageUtil.*;
+import static org.apexlegendsbphelper.TextUtil.*;
 
 import net.sourceforge.tess4j.TesseractException;
 
@@ -158,6 +159,8 @@ public class Main {
 
                     currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
                 }
+
+                currQuest.setName(correctSentence(currQuest.getName(), System.getProperty("user.dir") + File.separator + "data" + File.separator + "tessvocabulary.txt"));
 
                 System.out.println(String.format("Quest name: %s", currQuest.getName()));
                 System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
