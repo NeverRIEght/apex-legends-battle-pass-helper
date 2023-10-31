@@ -13,7 +13,7 @@ import java.io.IOException;
 
 
 public class Main {
-    public static String inputImagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
+    public static String inputImagePath = "D:\\apex-tests\\image_2023-10-24_19-32-46.png";
     public static String inputImageFolderPath;
     public static String tempFolderPath;
     public static String tempImagePath;
@@ -167,7 +167,6 @@ public class Main {
                 System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
                 System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
                 System.out.println("---------------");
-
             }
         }
 
