@@ -31,11 +31,17 @@ public class Main {
             new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
         } else {
             new File(tempFolderPath).mkdirs();
             new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
         }
 
 
@@ -91,6 +97,8 @@ public class Main {
         for (int i = 0; i < tmpImages.length; i++) {
             if (tmpImages[i].isFile() && (!tmpImages[i].getName().equals("input_grayscale.png") && (!tmpImages[i].getName().equals("input_blackwhite.png")))) {
 
+                Quest currQuest = new Quest();
+
                 BufferedImage buffImage = ImageIO.read(tmpImages[i]);
 
                 int lastDotIndex = tmpImages[i].getName().lastIndexOf(".");
@@ -105,16 +113,32 @@ public class Main {
                 boolean hasSecondGamemode = imageIsOR(currentImage);
 
                 newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpBR.png";
-                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpBR" + File.separator + newImageName, 5, 5, 450, 64);
+                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpBR" + File.separator + newImageName, 5, 5, 15, 15);
 
                 boolean hasBROption = checkForBROption(currentImage);
 
                 newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpNBR.png";
-                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpNBR" + File.separator + newImageName, 470, 5, 490, 64);
+                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpNBR" + File.separator + newImageName, 470, 5, 480, 15);
 
                 boolean hasNbrOption = checkForNBROption(currentImage);
 
                 System.out.println("hasOR: " + hasSecondGamemode + "; hasBR: " + hasBROption + "; hasNBR: " + hasNbrOption);
+
+                newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_BR.png";
+
+                if(hasSecondGamemode) {
+                    newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_BR.png";
+                    currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 30, 0, 385, 30);
+                    newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_NBR.png";
+                    currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 504, 0, 880, 30);
+                } else {
+                    newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName.png";
+                    if(hasBROption) {
+                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 30, 0, 700, 30);
+                    } else {
+                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 0, 0, 700, 30);
+                    }
+                }
             }
         }
 

@@ -4,6 +4,9 @@ public class Quest {
     private int id;
     private String name;
     private short type;
+    private boolean hasBR = false;
+    private boolean hasNBR = false;
+    private boolean hasBothGamemodes = false;
     private int BRProgress = 0;
     private int BRTarget = 0;
     private int NBRProgress = 0;
