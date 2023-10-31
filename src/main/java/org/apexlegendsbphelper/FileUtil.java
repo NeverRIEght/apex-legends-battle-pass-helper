@@ -23,4 +23,26 @@ public class FileUtil {
         }
         return false;
     }
+
+    public static void recreateDirectories(String tempFolderPath) {
+
+        if (new File(tempFolderPath).exists()) {
+            deleteDirectory(new File(tempFolderPath));
+            new File(tempFolderPath).mkdirs();
+            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
+        } else {
+            new File(tempFolderPath).mkdirs();
+            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
+        }
+    }
 }

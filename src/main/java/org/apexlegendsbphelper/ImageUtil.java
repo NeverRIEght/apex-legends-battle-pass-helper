@@ -3,6 +3,7 @@ package org.apexlegendsbphelper;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import org.w3c.dom.ls.LSOutput;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -127,12 +128,16 @@ public abstract class ImageUtil {
         int width = endX - startX;
         int height = endY - startY;
 
+        //System.out.println(outputImagePath);
+
         BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 int sourceX = x + startX;
                 int sourceY = y + startY;
+
+                //System.out.println("sourceX: " + sourceX + "; sourceY: " + sourceY);
 
                 int rgb = image.getRGB(sourceX, sourceY);
                 croppedImage.setRGB(x, y, rgb);
