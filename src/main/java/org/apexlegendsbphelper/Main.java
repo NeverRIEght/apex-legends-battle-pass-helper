@@ -126,7 +126,7 @@ public class Main {
                             currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
                             currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 200);
 
-                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
+                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, false));
 
                             // NBR Part
 
@@ -136,7 +136,7 @@ public class Main {
                             currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
                             currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 180);
 
-                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
+                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, false));
 
                         } else {
                             newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName.png";
@@ -149,7 +149,7 @@ public class Main {
                             currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
                             currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 180);
 
-                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
+                            currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, false));
                         }
 
 
@@ -167,12 +167,12 @@ public class Main {
                         // Recognise quest reward
 
                         newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpRe_BR.png";
-                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, buffImage.getWidth() - 100, 0, buffImage.getWidth() - 60, 60);
+                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, buffImage.getWidth() - 100, 10, buffImage.getWidth() - 60, 50);
 
                         currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName);
                         currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, 170);
 
-                        //System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName).trim() + "\"");
+                        System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, true).trim() + "\"");
 
 
                         // Print Quest

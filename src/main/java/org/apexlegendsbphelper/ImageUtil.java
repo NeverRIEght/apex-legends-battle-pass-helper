@@ -16,6 +16,7 @@ public abstract class ImageUtil {
                                                   + File.separator + "tesseract" + File.separator + "share"
                                                   + File.separator + "tessdata";
     private static final String tesseractSetLanguage = "eng+eng_old";
+    private static final String tesseractSetDigits = "digits";
     static int tesseractSetPageSegMode = 1;
     static int tesseractSetOcrEngineMode = 1;
     public static BufferedImage loadImage(String pathToImage) throws IOException {
@@ -173,10 +174,16 @@ public abstract class ImageUtil {
         return croppedImage;
     }
 
-    public static String recogniseText(String pathToImage) throws TesseractException {
+    public static String recogniseText(String pathToImage, boolean isDigitsOnly) throws TesseractException {
         Tesseract tesseract = new Tesseract();
         tesseract.setDatapath(tesseractDatapath);
-        tesseract.setLanguage(tesseractSetLanguage);
+
+        if (isDigitsOnly) {
+            tesseract.setLanguage(tesseractSetDigits);
+        } else {
+            tesseract.setLanguage(tesseractSetLanguage);
+        }
+
         tesseract.setPageSegMode(tesseractSetPageSegMode);
         tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
         tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
