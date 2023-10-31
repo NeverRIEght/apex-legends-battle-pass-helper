@@ -40,6 +40,30 @@ public class Quest {
         this.type = type;
     }
 
+    public boolean isHasBR() {
+        return hasBR;
+    }
+
+    public void setHasBR(boolean hasBR) {
+        this.hasBR = hasBR;
+    }
+
+    public boolean isHasNBR() {
+        return hasNBR;
+    }
+
+    public void setHasNBR(boolean hasNBR) {
+        this.hasNBR = hasNBR;
+    }
+
+    public boolean isHasBothGamemodes() {
+        return hasBothGamemodes;
+    }
+
+    public void setHasBothGamemodes(boolean hasBothGamemodes) {
+        this.hasBothGamemodes = hasBothGamemodes;
+    }
+
     public int getBRProgress() {
         return BRProgress;
     }

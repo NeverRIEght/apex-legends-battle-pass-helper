@@ -99,6 +99,7 @@ public class Main {
 
                 Quest currQuest = new Quest();
 
+
                 BufferedImage buffImage = ImageIO.read(tmpImages[i]);
 
                 int lastDotIndex = tmpImages[i].getName().lastIndexOf(".");
@@ -109,36 +110,61 @@ public class Main {
 
                 imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newImageName);
                 imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newImageName, 120);
-
-                boolean hasSecondGamemode = imageIsOR(currentImage);
+                currQuest.setHasBothGamemodes(imageIsOR(currentImage));
 
                 newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpBR.png";
                 currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpBR" + File.separator + newImageName, 5, 5, 15, 15);
-
-                boolean hasBROption = checkForBROption(currentImage);
+                currQuest.setHasBR(checkForBROption(currentImage));
 
                 newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpNBR.png";
                 currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpNBR" + File.separator + newImageName, 470, 5, 480, 15);
+                currQuest.setHasNBR(checkForNBROption(currentImage));
 
-                boolean hasNbrOption = checkForNBROption(currentImage);
 
-                System.out.println("hasOR: " + hasSecondGamemode + "; hasBR: " + hasBROption + "; hasNBR: " + hasNbrOption);
 
                 newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_BR.png";
 
-                if(hasSecondGamemode) {
+                if(currQuest.isHasBothGamemodes()) {
+                    // BR Part
+
                     newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_BR.png";
                     currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 30, 0, 385, 30);
+
+                    currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
+                    currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 200);
+
+                    currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
+
+                    // NBR Part
+
                     newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName_NBR.png";
                     currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 504, 0, 880, 30);
+
+                    currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
+                    currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 180);
+
+                    currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
+
                 } else {
                     newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpName.png";
-                    if(hasBROption) {
+                    if(currQuest.isHasBR()) {
                         currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 30, 0, 700, 30);
                     } else {
                         currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 0, 0, 700, 30);
                     }
+
+                    currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName);
+                    currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpName" + File.separator + newImageName, 180);
+
+                    currQuest.setName(recogniseText(tempFolderPath + File.separator + "tmpName" + File.separator + newImageName));
                 }
+
+                System.out.println(String.format("Quest name: %s", currQuest.getName()));
+                System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
+                System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
+                System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
+                System.out.println("---------------");
+
             }
         }
 
