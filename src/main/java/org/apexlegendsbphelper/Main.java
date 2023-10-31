@@ -12,7 +12,7 @@ import java.io.IOException;
 
 
 public class Main {
-    public static String inputImagePath = "C:\\Users\\LFKom\\Downloads\\image_2023-10-24_19-32-46.png";
+    public static String inputImagePath = "/Users/michaelkomarov/Downloads/image_2023-10-24_19-32-46.png";
     public static String inputImageFolderPath;
     public static String tempFolderPath;
     public static String tempImagePath;
@@ -95,16 +95,26 @@ public class Main {
 
                 int lastDotIndex = tmpImages[i].getName().lastIndexOf(".");
                 String imgNumber = tmpImages[i].getName().substring(lastDotIndex - 1, lastDotIndex);
-                String newName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpOR.png";
+                String newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpOR.png";
 
-                BufferedImage orImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 400, 0, 470, 64);
+                BufferedImage currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newImageName, 400, 0, 470, 64);
 
-                imageToGrayscale(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName);
-                imageToBlackWhite(orImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newName, 120);
+                imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newImageName);
+                imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpOR" + File.separator + newImageName, 120);
 
+                boolean hasSecondGamemode = imageIsOR(currentImage);
 
+                newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpBR.png";
+                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpBR" + File.separator + newImageName, 5, 5, 450, 64);
 
-                System.out.println(imageIsOR(orImage));
+                boolean hasBROption = checkForBROption(currentImage);
+
+                newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpNBR.png";
+                currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpNBR" + File.separator + newImageName, 470, 5, 490, 64);
+
+                boolean hasNbrOption = checkForNBROption(currentImage);
+
+                System.out.println("hasOR: " + hasSecondGamemode + "; hasBR: " + hasBROption + "; hasNBR: " + hasNbrOption);
             }
         }
 

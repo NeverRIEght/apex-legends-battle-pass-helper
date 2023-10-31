@@ -205,4 +205,34 @@ public abstract class ImageUtil {
 
         return false;
     }
+
+    public static boolean checkForBROption(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (image.getRGB(x, y) == -12544866) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean checkForNBROption(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (image.getRGB(x, y) == -16758925) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
