@@ -155,13 +155,46 @@ public class Main {
 
                         // Recognise quest progress
 
-                        newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpPr_BR.png";
-                        currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 24, 34, 400, 60);
+                        if(currQuest.isHasBothGamemodes()) {
+                            // BR Part
 
-                        currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName);
-                        currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 180);
+                            newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpPr_BR.png";
+                            currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 24, 34, 400, 60);
 
-                        //System.out.println(recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName));
+                            currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName);
+                            currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 180);
+
+                            if(recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, false).trim() == "Completed") {
+                                currQuest.setCompleted(true);
+                            }
+
+
+                            // NBR Part
+
+                            newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpPr_BR.png";
+                            currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 490, 34, 700, 60);
+
+                            currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName);
+                            currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 180);
+
+                            System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, false) + "\"");
+                            if(recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, false).trim() == "Completed") {
+                                currQuest.setCompleted(true);
+                            }
+                        } else {
+                            newImageName = tmpImages[i].getName().substring(0, lastDotIndex - 1) + imgNumber + "_tmpPr_BR.png";
+                            currentImage = cropImageByPixels(buffImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 24, 34, 400, 60);
+
+                            currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName);
+                            currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, 180);
+
+                            System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, false) + "\"");
+                            if(recogniseText(tempFolderPath + File.separator + "tmpPr" + File.separator + newImageName, false).trim() == "Completed") {
+                                currQuest.setCompleted(true);
+                            }
+                        }
+
+
 
 
                         // Recognise quest reward
@@ -172,18 +205,19 @@ public class Main {
                         currentImage = imageToGrayscale(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName);
                         currentImage = imageToBlackWhite(currentImage, tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, 170);
 
-                        System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, true).trim() + "\"");
+                        //System.out.println("\"" + recogniseText(tempFolderPath + File.separator + "tmpRe" + File.separator + newImageName, true).trim() + "\"");
 
 
                         // Print Quest
 
                         //currQuest.setName(correctSentence(currQuest.getName(), System.getProperty("user.dir") + File.separator + "data" + File.separator + "tessvocabulary.txt"));
 
-//                        System.out.println(String.format("Quest name: %s", currQuest.getName()));
-//                        System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
-//                        System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
-//                        System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
-//                        System.out.println("---------------");
+                        System.out.println(String.format("Quest name: %s", currQuest.getName()));
+                        System.out.println(String.format("Has BR and NBR: %s", currQuest.isHasBothGamemodes()));
+                        System.out.println(String.format("Has BR: %s", currQuest.isHasBR()));
+                        System.out.println(String.format("Has NBR: %s", currQuest.isHasNBR()));
+                        System.out.println(String.format("Completed: %b", currQuest.isCompleted()));
+                        System.out.println("---------------");
                     }
                 }
             }
