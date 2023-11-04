@@ -3,12 +3,14 @@ package org.apexlegendsbphelper;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.ITessAPI.TessPageIteratorLevel;
 import org.w3c.dom.ls.LSOutput;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
+import java.util.List;
 import javax.imageio.*;
 
 public abstract class ImageUtil {
@@ -246,5 +248,26 @@ public abstract class ImageUtil {
         }
 
         return false;
+    }
+
+    public static void getTextCoords(String pathToImage) throws TesseractException, IOException {
+        Tesseract tesseract = new Tesseract();
+        tesseract.setDatapath(tesseractDatapath);
+        tesseract.setLanguage(tesseractSetLanguage);
+        tesseract.setPageSegMode(tesseractSetPageSegMode);
+        tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
+        tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
+
+        BufferedImage image = ImageIO.read(new File(pathToImage));
+
+        String recognizedText = tesseract.doOCR(new File(pathToImage));
+
+        List<Rectangle> textCoordinates = tesseract.getSegmentedRegions(image, TessPageIteratorLevel.RIL_BLOCK);
+
+        // Выведите распознанный текст и его координаты
+        System.out.println("Распознанный текст: " + recognizedText);
+        for (Rectangle rect : textCoordinates) {
+            System.out.println("Координаты текста: x=" + rect.x + ", y=" + rect.y + ", ширина=" + rect.width + ", высота=" + rect.height);
+        }
     }
 }
