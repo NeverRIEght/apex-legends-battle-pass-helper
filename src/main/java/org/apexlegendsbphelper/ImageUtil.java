@@ -65,73 +65,9 @@ public abstract class ImageUtil {
         return image;
     }
 
-    public static int[] findFirstQuest (BufferedImage image) {
-//        int[] firstQuestCoords = new int[12];
-//
-//        //Current quest name
-//        outerLoop:
-//        for(int i = 0; i < 50; i++) {
-//            for(int j = 0; j < 50; j++) {
-//                if(image.getRGB(i, j) == -16777216) { // -16777216 = black; -1 = white
-//                    firstQuestCoords[0] = i;
-//                    firstQuestCoords[1] = j;
-//                    firstQuestCoords[2] = i + 800;
-//                    firstQuestCoords[3] = j + 32;
-//                    break outerLoop;
-//                }
-//            }
-//        }
-//
-//        //Current quest progress
-//        firstQuestCoords[4] = firstQuestCoords[0] + 22;
-//        firstQuestCoords[5] = firstQuestCoords[3] + 3;
-//        firstQuestCoords[6] = firstQuestCoords[0] + 300;
-//        firstQuestCoords[7] = firstQuestCoords[3] + 25;
-//
-//        //Stars for current quest
-//        firstQuestCoords[8] = image.getWidth() - 120;
-//        firstQuestCoords[9] = firstQuestCoords[1] + 18;
-//        firstQuestCoords[10] = image.getWidth() - 60;
-//        firstQuestCoords[11] =  firstQuestCoords[9] + 30;
-//
-//
-//        return firstQuestCoords;
-
-
-        int[] firstQuestCoords = {0, 0, 0, 0};
-
-        outerLoop:
-        for(int i = 0; i < 50; i++) {
-            for(int j = 0; j < 50; j++) {
-                if(image.getRGB(i, j) == -16777216) { // -16777216 = black; -1 = white
-                    firstQuestCoords[0] = i;
-                    firstQuestCoords[1] = j;
-                    break outerLoop;
-                }
-            }
-        }
-
-
-
-        for(int j = firstQuestCoords[1]; j < 100; j++) {
-            if(image.getRGB(firstQuestCoords[0], j) == -1) { // -16777216 = black; -1 = white
-                firstQuestCoords[3] = j;
-                break;
-            }
-        }
-
-        if(firstQuestCoords[0] != 0 && firstQuestCoords[1] != 0 && firstQuestCoords[3] != 0) {
-            firstQuestCoords[2] = firstQuestCoords[0] + 990;
-        }
-
-        return firstQuestCoords;
-    }
-
     public static BufferedImage cropImageByPixels(BufferedImage image, String outputImagePath, int startX, int startY, int endX, int endY) throws IOException {
         int width = endX - startX;
         int height = endY - startY;
-
-        //System.out.println(outputImagePath);
 
         BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
 
@@ -139,9 +75,6 @@ public abstract class ImageUtil {
             for (int y = 0; y < height; y++) {
                 int sourceX = x + startX;
                 int sourceY = y + startY;
-
-                //System.out.println("sourceX: " + sourceX + "; sourceY: " + sourceY);
-
                 int rgb = image.getRGB(sourceX, sourceY);
                 croppedImage.setRGB(x, y, rgb);
             }
@@ -193,81 +126,50 @@ public abstract class ImageUtil {
         return tesseract.doOCR(new File(pathToImage));
     }
 
-    public static boolean imageIsOR(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int ORCounter = 0;
-        boolean ifOR = false;
+    public static int[] searchFirstColoredPixel(BufferedImage image, int colorCode, int startX, int startY) {
+        int coords[] = new int[] {-1, -1};
+        for (int x = startX; x < image.getWidth(); x++) {
+            for (int y = startY; y < image.getHeight(); y++) {
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (image.getRGB(x, y) == -1) {
-                    int whitePixelCount = 0;
-                    for (int j = x + 1; j < width; j++) {
-                        if (image.getRGB(j, y) == -1) {
-                            whitePixelCount++;
-                        } else {
-                            break;
-                        }
-                        if (whitePixelCount == 9) {
-                            return true;
-                        }
-                    }
+                int color = image.getRGB(x, y);
+                if(color == colorCode) {
+                    coords[0] = x;
+                    coords[1] = y;
+                    return coords;
                 }
             }
         }
-
-        return false;
+        return coords;
     }
 
-    public static boolean checkForBROption(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
+    public static int[] searchLastColoredPixel(BufferedImage image, int colorCode, int startX, int startY, int endX, int endY) {
+        int coords[] = new int[] {-1, -1};
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (image.getRGB(x, y) == -12544866) {
-                    return true;
+        if(endX > image.getWidth() || endY > image.getHeight()) {
+            return coords;
+        }
+
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
+
+                int color = image.getRGB(x, y);
+                if(color == colorCode) {
+                    coords[0] = x;
+                    coords[1] = y;
                 }
             }
         }
-
-        return false;
+        return coords;
     }
 
-    public static boolean checkForNBROption(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
+    public static int determineQuestHeight(BufferedImage image) throws IOException {
+        int coords1[] = new int[2];
+        int coords2[] = new int[2];
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (image.getRGB(x, y) == -16758925) {
-                    return true;
-                }
-            }
-        }
+        coords1 = searchFirstColoredPixel(image, -12544866, 0, 0);
+        coords2 = searchFirstColoredPixel(image, -12544866, coords1[0], coords1[1] + 50);
 
-        return false;
-    }
-
-    public static void getTextCoords(String pathToImage) throws TesseractException, IOException {
-        Tesseract tesseract = new Tesseract();
-        tesseract.setDatapath(tesseractDatapath);
-        tesseract.setLanguage(tesseractSetLanguage);
-        tesseract.setPageSegMode(tesseractSetPageSegMode);
-        tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
-        tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
-
-        BufferedImage image = ImageIO.read(new File(pathToImage));
-
-        String recognizedText = tesseract.doOCR(new File(pathToImage));
-
-        List<Rectangle> textCoordinates = tesseract.getSegmentedRegions(image, TessPageIteratorLevel.RIL_BLOCK);
-
-        // Выведите распознанный текст и его координаты
-        System.out.println("Распознанный текст: " + recognizedText);
-        for (Rectangle rect : textCoordinates) {
-            System.out.println("Координаты текста: x=" + rect.x + ", y=" + rect.y + ", ширина=" + rect.width + ", высота=" + rect.height);
-        }
+        int questHeight = coords2[1] - coords1[1];
+        return questHeight;
     }
 }
