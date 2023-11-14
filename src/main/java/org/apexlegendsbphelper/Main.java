@@ -1,4 +1,5 @@
 package org.apexlegendsbphelper;
+
 import static org.apexlegendsbphelper.FileUtil.*;
 import static org.apexlegendsbphelper.ImageUtil.*;
 
@@ -16,6 +17,7 @@ public class Main {
     public static String tempFolderPath;
     public static String tempImagePath;
     public static String grayscaleImagePath;
+
     public static void main(String[] args) throws TesseractException, IOException {
 
 
@@ -44,13 +46,9 @@ public class Main {
 
                 System.out.println("------------------------");
                 int questHeight = determineQuestHeight(inputImage);
-
+                cropQuestsOnImage(inputImage); //988 571
             }
         }
-
-
-
-
 
 
     }

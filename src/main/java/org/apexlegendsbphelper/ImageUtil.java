@@ -13,19 +13,23 @@ import java.io.File;
 import java.util.List;
 import javax.imageio.*;
 
+import static org.apexlegendsbphelper.Main.grayscaleImagePath;
+import static org.apexlegendsbphelper.Main.tempImagePath;
+
 public abstract class ImageUtil {
     private static final String tesseractDatapath = System.getProperty("user.dir") + File.separator + "lib"
-                                                  + File.separator + "tesseract" + File.separator + "share"
-                                                  + File.separator + "tessdata";
+            + File.separator + "tesseract" + File.separator + "share"
+            + File.separator + "tessdata";
     private static final String tesseractSetLanguage = "eng+eng_old";
     private static final String tesseractSetDigits = "digits";
     static int tesseractSetPageSegMode = 1;
     static int tesseractSetOcrEngineMode = 1;
+
     public static BufferedImage loadImage(String pathToImage) throws IOException {
         return ImageIO.read(new File(pathToImage));
     }
 
-    public static BufferedImage imageToGrayscale (BufferedImage image, String pathToGrayscale) throws IOException {
+    public static BufferedImage imageToGrayscale(BufferedImage image, String pathToGrayscale) throws IOException {
         BufferedImage result;
         try {
             int width = image.getWidth();
@@ -127,12 +131,12 @@ public abstract class ImageUtil {
     }
 
     public static int[] searchFirstColoredPixel(BufferedImage image, int colorCode, int startX, int startY) {
-        int coords[] = new int[] {-1, -1};
+        int coords[] = new int[]{-1, -1};
         for (int x = startX; x < image.getWidth(); x++) {
             for (int y = startY; y < image.getHeight(); y++) {
 
                 int color = image.getRGB(x, y);
-                if(color == colorCode) {
+                if (color == colorCode) {
                     coords[0] = x;
                     coords[1] = y;
                     return coords;
@@ -143,9 +147,9 @@ public abstract class ImageUtil {
     }
 
     public static int[] searchLastColoredPixel(BufferedImage image, int colorCode, int startX, int startY, int endX, int endY) {
-        int coords[] = new int[] {-1, -1};
+        int coords[] = new int[]{-1, -1};
 
-        if(endX > image.getWidth() || endY > image.getHeight()) {
+        if (endX > image.getWidth() || endY > image.getHeight()) {
             return coords;
         }
 
@@ -153,7 +157,7 @@ public abstract class ImageUtil {
             for (int y = startY; y < endY; y++) {
 
                 int color = image.getRGB(x, y);
-                if(color == colorCode) {
+                if (color == colorCode) {
                     coords[0] = x;
                     coords[1] = y;
                 }
@@ -171,5 +175,37 @@ public abstract class ImageUtil {
 
         int questHeight = coords2[1] - coords1[1];
         return questHeight;
+    }
+
+    public static void cropQuestsOnImage(BufferedImage image) throws IOException {
+        int topOuterPartY = -1;
+        int questHeight = determineQuestHeight(image);
+
+        int[] firstBRPixel = new int[2];
+        firstBRPixel = searchFirstColoredPixel(image, -12544866, 0, 0);
+
+        if (firstBRPixel[0] == -1) {
+            return;
+        }
+
+        image = cropImageByPixels(image, tempImagePath, firstBRPixel[0], 0, image.getWidth(), image.getHeight());
+        BufferedImage grayscaleImage = imageToGrayscale(image, grayscaleImagePath);
+        BufferedImage blackWhiteImage = imageToBlackWhite(grayscaleImage, tempImagePath, 175);
+
+        if (blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1]) == -1 && blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1] - 1) == -16777216) {
+            for (int y = firstBRPixel[1] - 2; y > 0; y--) {
+
+                int color = blackWhiteImage.getRGB(firstBRPixel[0], y); // -16777216 = black; -1 = white
+
+                if (color == -1 && topOuterPartY == -1) {
+                    topOuterPartY = firstBRPixel[1] - y - 1;
+                }
+            }
+
+            blackWhiteImage = cropImageByPixels(blackWhiteImage, tempImagePath, 0, topOuterPartY, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+            blackWhiteImage = cropImageByPixels(blackWhiteImage, tempImagePath, 0, questHeight, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+        }
+
+
     }
 }
