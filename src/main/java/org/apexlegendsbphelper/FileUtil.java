@@ -29,20 +29,12 @@ public class FileUtil {
         if (new File(tempFolderPath).exists()) {
             deleteDirectory(new File(tempFolderPath));
             new File(tempFolderPath).mkdirs();
-            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuests").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuestsBlackWhite").mkdirs();
         } else {
             new File(tempFolderPath).mkdirs();
-            new File(tempFolderPath + File.separator + "tmpOR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpBR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpNBR").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpName").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpPr").mkdirs();
-            new File(tempFolderPath + File.separator + "tmpRe").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuests").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuestsBlackWhite").mkdirs();
         }
     }
 }

@@ -16,6 +16,7 @@ public class Main {
     public static String inputImageFolderPath;
     public static String tempFolderPath;
     public static String tempImagePath;
+    public static String blackWhiteImagePath;
     public static String grayscaleImagePath;
 
     public static void main(String[] args) throws TesseractException, IOException {
@@ -25,8 +26,10 @@ public class Main {
 
         inputImageFolderPath = new File(inputFolderPath).toString();
         tempFolderPath = new File(inputImageFolderPath).toString() + File.separator + "tmp";
+        tempImagePath = tempFolderPath + File.separator + "input.png";
         grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
-        tempImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
+        blackWhiteImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
+
 
         recreateDirectories(tempFolderPath);
 
@@ -41,8 +44,8 @@ public class Main {
 
                 BufferedImage inputImage = ImageIO.read(weekImages[imgIndex]);
                 BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
-                imageToBlackWhite(grayscaleImage, tempImagePath, 175);
-                BufferedImage tempImage = loadImage(tempImagePath);
+                imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
+                BufferedImage tempImage = loadImage(blackWhiteImagePath);
 
                 System.out.println("------------------------");
                 int questHeight = determineQuestHeight(inputImage);

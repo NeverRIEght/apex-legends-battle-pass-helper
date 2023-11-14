@@ -3,18 +3,14 @@ package org.apexlegendsbphelper;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import net.sourceforge.tess4j.ITessAPI.TessPageIteratorLevel;
-import org.w3c.dom.ls.LSOutput;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
-import java.util.List;
 import javax.imageio.*;
 
-import static org.apexlegendsbphelper.Main.grayscaleImagePath;
-import static org.apexlegendsbphelper.Main.tempImagePath;
+import static org.apexlegendsbphelper.Main.*;
 
 public abstract class ImageUtil {
     private static final String tesseractDatapath = System.getProperty("user.dir") + File.separator + "lib"
@@ -178,19 +174,17 @@ public abstract class ImageUtil {
     }
 
     public static void cropQuestsOnImage(BufferedImage image) throws IOException {
+
+
         int topOuterPartY = -1;
         int questHeight = determineQuestHeight(image);
 
         int[] firstBRPixel = new int[2];
         firstBRPixel = searchFirstColoredPixel(image, -12544866, 0, 0);
 
-        if (firstBRPixel[0] == -1) {
-            return;
-        }
-
-        image = cropImageByPixels(image, tempImagePath, firstBRPixel[0], 0, image.getWidth(), image.getHeight());
+        image = cropImageByPixels(image, blackWhiteImagePath, firstBRPixel[0], 0, image.getWidth(), image.getHeight());
         BufferedImage grayscaleImage = imageToGrayscale(image, grayscaleImagePath);
-        BufferedImage blackWhiteImage = imageToBlackWhite(grayscaleImage, tempImagePath, 175);
+        BufferedImage blackWhiteImage = imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
 
         if (blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1]) == -1 && blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1] - 1) == -16777216) {
             for (int y = firstBRPixel[1] - 2; y > 0; y--) {
@@ -202,8 +196,17 @@ public abstract class ImageUtil {
                 }
             }
 
-            blackWhiteImage = cropImageByPixels(blackWhiteImage, tempImagePath, 0, topOuterPartY, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
-            blackWhiteImage = cropImageByPixels(blackWhiteImage, tempImagePath, 0, questHeight, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+            image = cropImageByPixels(image, tempImagePath, 0, topOuterPartY, image.getWidth(), image.getHeight());
+            blackWhiteImage = cropImageByPixels(blackWhiteImage, blackWhiteImagePath, 0, topOuterPartY, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+
+            for (int questIndex = 0; questIndex < 7; questIndex++) {
+                BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, image.getWidth(), questHeight * questIndex + questHeight);
+                BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, blackWhiteImage.getWidth(), questHeight * questIndex + questHeight);
+                //BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest1.png", 0, topOuterPartY, image.getWidth(), image.getHeight());
+            }
+
+            BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, image.getWidth(), image.getHeight());
+            BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
         }
 
 
