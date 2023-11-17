@@ -47,9 +47,10 @@ public class Main {
                 imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
                 BufferedImage tempImage = loadImage(blackWhiteImagePath);
 
-                System.out.println("------------------------");
+
                 int questHeight = determineQuestHeight(inputImage);
-                cropQuestsOnImage(inputImage); //988 571
+                System.out.println(questHeight);
+                cropQuestsOnImage(inputImage);
             }
         }
 
