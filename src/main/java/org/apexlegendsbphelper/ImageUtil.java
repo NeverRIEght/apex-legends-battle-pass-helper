@@ -186,29 +186,76 @@ public abstract class ImageUtil {
         BufferedImage grayscaleImage = imageToGrayscale(image, grayscaleImagePath);
         BufferedImage blackWhiteImage = imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
 
-        if (blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1]) == -1 && blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1] - 1) == -16777216) {
-            for (int y = firstBRPixel[1] - 2; y > 0; y--) {
+        int[] firstQuestCoords = new int[]{-1, -1, -1, -1};
 
-                int color = blackWhiteImage.getRGB(firstBRPixel[0], y); // -16777216 = black; -1 = white
+        boolean foundFirstQuestH = false;
 
-                if (color == -1 && topOuterPartY == -1) {
-                    topOuterPartY = firstBRPixel[1] - y - 1;
+        for (int y = firstBRPixel[1] - 2; y > 0; y--) {
+
+            int color = blackWhiteImage.getRGB(firstBRPixel[0], y); // -16777216 = black; -1 = white
+            int prevColor = blackWhiteImage.getRGB(firstBRPixel[0], y + 1);
+
+            if (color == -1 && prevColor == -16777216 && foundFirstQuestH == false) {
+                int leftCount = firstBRPixel[0];
+                int leftPositive = 0;
+                int rightCount = blackWhiteImage.getWidth() - firstBRPixel[0];
+                int rightPositive = 0;
+
+                for (int i = leftCount; i > 0; i--) {
+                    int outerColor = blackWhiteImage.getRGB(firstBRPixel[0] - i, y); // -16777216 = black; -1 = white
+                    int interColor = blackWhiteImage.getRGB(firstBRPixel[0] - i, y + 1);
+
+                    if (outerColor == -1 && interColor == -16777216) {
+                        leftPositive++;
+                    }
+                }
+
+                for (int i = firstBRPixel[0]; i < blackWhiteImage.getWidth(); i++) {
+                    int outerColor = blackWhiteImage.getRGB(i, y); // -16777216 = black; -1 = white
+                    int interColor = blackWhiteImage.getRGB(i, y + 1);
+
+                    if (outerColor == -1 && interColor == -16777216) {
+                        rightPositive++;
+                    }
+                }
+
+                double percentage = (double) (leftPositive + rightPositive) / (leftCount + rightCount);
+                if (percentage > 0.4) {
+                    firstQuestCoords[1] = y + 1;
+                    firstQuestCoords[3] = firstQuestCoords[1] + questHeight;
+                    foundFirstQuestH = true;
                 }
             }
-
-            image = cropImageByPixels(image, tempImagePath, 0, topOuterPartY, image.getWidth(), image.getHeight());
-            blackWhiteImage = cropImageByPixels(blackWhiteImage, blackWhiteImagePath, 0, topOuterPartY, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
-
-            for (int questIndex = 0; questIndex < 7; questIndex++) {
-                BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, image.getWidth(), questHeight * questIndex + questHeight);
-                BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, blackWhiteImage.getWidth(), questHeight * questIndex + questHeight);
-                //BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest1.png", 0, topOuterPartY, image.getWidth(), image.getHeight());
-            }
-
-            BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, image.getWidth(), image.getHeight());
-            BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
         }
 
+        System.out.println(firstQuestCoords[1] + "   " + firstQuestCoords[3]);
 
+        for (int x = blackWhiteImage.getWidth() / 2; x < blackWhiteImage.getWidth(); x++) {
+            int color = blackWhiteImage.getRGB(x, firstQuestCoords[1]); // -16777216 = black; -1 = white
+
+            
+        }
+//        if (blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1]) == -1 && blackWhiteImage.getRGB(firstBRPixel[0], firstBRPixel[1] - 1) == -16777216) {
+//            for (int y = firstBRPixel[1] - 2; y > 0; y--) {
+//
+//                int color = blackWhiteImage.getRGB(firstBRPixel[0], y); // -16777216 = black; -1 = white
+//
+//                if (color == -1 && topOuterPartY == -1) {
+//                    topOuterPartY = firstBRPixel[1] - y - 1;
+//                }
+//            }
+//
+//            image = cropImageByPixels(image, tempImagePath, 0, topOuterPartY, image.getWidth(), image.getHeight());
+//            blackWhiteImage = cropImageByPixels(blackWhiteImage, blackWhiteImagePath, 0, topOuterPartY, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+//
+//            for (int questIndex = 0; questIndex < 7; questIndex++) {
+//                BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, image.getWidth(), questHeight * questIndex + questHeight);
+//                BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + questIndex + ".png", 0, questHeight * questIndex, blackWhiteImage.getWidth(), questHeight * questIndex + questHeight);
+//                //BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest1.png", 0, topOuterPartY, image.getWidth(), image.getHeight());
+//            }
+//
+//            BufferedImage questImage = cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, image.getWidth(), image.getHeight());
+//            BufferedImage questBlackWhiteImage = cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + 7 + ".png", 0, questHeight * 7, blackWhiteImage.getWidth(), blackWhiteImage.getHeight());
+//        }
     }
 }
