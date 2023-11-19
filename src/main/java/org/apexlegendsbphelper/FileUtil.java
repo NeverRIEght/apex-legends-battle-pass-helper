@@ -33,12 +33,14 @@ public class FileUtil {
             new File(tempFolderPath + File.separator + "tmpQuestsBlackWhite").mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuestsBR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuestsNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuestsReward").mkdirs();
         } else {
             new File(tempFolderPath).mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuests").mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuestsBlackWhite").mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuestsBR").mkdirs();
             new File(tempFolderPath + File.separator + "tmpQuestsNBR").mkdirs();
+            new File(tempFolderPath + File.separator + "tmpQuestsReward").mkdirs();
         }
     }
 }
