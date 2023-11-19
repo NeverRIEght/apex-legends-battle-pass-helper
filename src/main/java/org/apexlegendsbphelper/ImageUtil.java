@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
+import java.nio.Buffer;
 import javax.imageio.*;
 
 import static org.apexlegendsbphelper.Main.*;
@@ -46,6 +47,7 @@ public abstract class ImageUtil {
     }
 
     public static BufferedImage imageToBlackWhite(BufferedImage image, String outputPath, int threshold) throws IOException {
+        BufferedImage outputImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -55,14 +57,14 @@ public abstract class ImageUtil {
                 int grayscale = (int) (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue());
 
                 if (grayscale > threshold) {
-                    image.setRGB(x, y, Color.WHITE.getRGB());
+                    outputImage.setRGB(x, y, Color.WHITE.getRGB());
                 } else {
-                    image.setRGB(x, y, Color.BLACK.getRGB());
+                    outputImage.setRGB(x, y, Color.BLACK.getRGB());
                 }
             }
         }
-        ImageIO.write(image, "png", new File(outputPath));
-        return image;
+        ImageIO.write(outputImage, "png", new File(outputPath));
+        return outputImage;
     }
 
     public static BufferedImage cropImageByPixels(BufferedImage image, String outputImagePath, int startX, int startY, int endX, int endY) throws IOException {
@@ -244,22 +246,25 @@ public abstract class ImageUtil {
 
     public static int determineQuestType(BufferedImage questImage) throws IOException {
 //        return:
-//        1 = regular
-//        2 = BR and NBR
-//        3 = BR only
-
-        boolean hasBR = false;
-        boolean hasNBR = false;
+//        1 = BR and NBR
+//        2 = BR only
+//        3 = regular
 
         int[] lastBRPixelCoords = new int[2];
-        //int[] lastNBRPixelCoords = new int[2];
-
-
+        int[] lastNBRPixelCoords = new int[2];
         lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
-        if (lastBRPixelCoords[0] != -1) {
-            
-        }
+        lastNBRPixelCoords = searchLastColoredPixel(questImage, -16758925);
 
-        return 1;
+        if (lastBRPixelCoords[0] != -1 && lastNBRPixelCoords[0] != -1) {
+            return 1;
+        } else if (lastBRPixelCoords[0] != -1) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    public static int recognisePixelColor(BufferedImage image, int x, int y) {
+        return image.getRGB(x, y);
     }
 }
