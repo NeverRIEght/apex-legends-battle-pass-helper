@@ -142,20 +142,16 @@ public abstract class ImageUtil {
         return coords;
     }
 
-    public static int[] searchLastColoredPixel(BufferedImage image, int colorCode, int startX, int startY, int endX, int endY) {
+    public static int[] searchLastColoredPixel(BufferedImage image, int colorCode) {
         int coords[] = new int[]{-1, -1};
-
-        if (endX > image.getWidth() || endY > image.getHeight()) {
-            return coords;
-        }
-
-        for (int x = startX; x < endX; x++) {
-            for (int y = startY; y < endY; y++) {
+        for (int x = image.getWidth() - 1; x > 0; x--) {
+            for (int y = image.getHeight() - 1; y > 0; y--) {
 
                 int color = image.getRGB(x, y);
                 if (color == colorCode) {
                     coords[0] = x;
                     coords[1] = y;
+                    return coords;
                 }
             }
         }
@@ -173,7 +169,7 @@ public abstract class ImageUtil {
         return questHeight;
     }
 
-    public static void cropQuestsOnImage(BufferedImage image) throws IOException {
+    public static boolean cropQuestsOnImage(BufferedImage image) throws IOException {
 
 
         int topOuterPartY = -1;
@@ -228,14 +224,11 @@ public abstract class ImageUtil {
             }
         }
 
-        System.out.println(firstQuestCoords[1] + "   " + firstQuestCoords[3]);
-
         int startQuestsCounter = (int) Math.floor(firstQuestCoords[3] / questHeight);
         int questsCounter = startQuestsCounter;
 
         for (int i = firstQuestCoords[3]; i > questHeight; i -= questHeight) {
             cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, image.getWidth(), i);
-            cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, blackWhiteImage.getWidth(), i);
             questsCounter--;
         }
 
@@ -243,8 +236,30 @@ public abstract class ImageUtil {
 
         for (int i = firstQuestCoords[3]; i < image.getHeight(); i += questHeight) {
             cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, image.getWidth(), i);
-            cropImageByPixels(blackWhiteImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, blackWhiteImage.getWidth(), i);
             questsCounter++;
         }
+
+        return questsCounter == 9 ? true : false;
+    }
+
+    public static int determineQuestType(BufferedImage questImage) throws IOException {
+//        return:
+//        1 = regular
+//        2 = BR and NBR
+//        3 = BR only
+
+        boolean hasBR = false;
+        boolean hasNBR = false;
+
+        int[] lastBRPixelCoords = new int[2];
+        //int[] lastNBRPixelCoords = new int[2];
+
+
+        lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
+        if (lastBRPixelCoords[0] != -1) {
+            
+        }
+
+        return 1;
     }
 }

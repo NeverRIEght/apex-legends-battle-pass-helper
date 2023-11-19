@@ -45,10 +45,24 @@ public class Main {
                 imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
                 BufferedImage tempImage = loadImage(blackWhiteImagePath);
 
+                if (cropQuestsOnImage(inputImage)) {
+                    System.out.println("Quests cropped successfully");
+                } else {
+                    System.out.println("Quests cropped with an error");
+                }
 
-                int questHeight = determineQuestHeight(inputImage);
-                System.out.println(questHeight);
-                cropQuestsOnImage(inputImage);
+                File questsDirectory = new File(tempFolderPath + File.separator + "tmpQuests");
+                File[] questImages = questsDirectory.listFiles();
+                for (int questIndex = 0; questIndex < questImages.length; questIndex++) {
+                    if (questImages[questIndex].isFile() && questImages[questIndex].getName().endsWith(".png")) {
+
+                        BufferedImage currQuestImage = ImageIO.read(questImages[questIndex]);
+
+                        System.out.println(questImages[questIndex].getName());
+                        determineQuestType(currQuestImage);
+                        BufferedImage currQuestBlackWhite = imageToBlackWhite(currQuestImage, tempFolderPath + File.separator + "tmpQuestsBlackWhite" + File.separator + "quest" + (questIndex + 1) + ".png", 150);
+                    }
+                }
             }
         }
 
