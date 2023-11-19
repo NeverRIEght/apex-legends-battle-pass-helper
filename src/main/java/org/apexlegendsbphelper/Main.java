@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class Main {
     public static String inputFolderPath = "D:\\apex-tests";
-    public static String inputImageFolderPath;
     public static String tempFolderPath;
     public static String tempImagePath;
     public static String blackWhiteImagePath;
@@ -24,8 +23,7 @@ public class Main {
 
         // Create and write path`s to directories
 
-        inputImageFolderPath = new File(inputFolderPath).toString();
-        tempFolderPath = new File(inputImageFolderPath).toString() + File.separator + "tmp";
+        tempFolderPath = new File(inputFolderPath).toString() + File.separator + "tmp";
         tempImagePath = tempFolderPath + File.separator + "input.png";
         grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
         blackWhiteImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
