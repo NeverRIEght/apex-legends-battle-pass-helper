@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
-import java.nio.Buffer;
 import javax.imageio.*;
 
 import static org.apexlegendsbphelper.Main.*;
@@ -22,27 +21,20 @@ public abstract class ImageUtil {
     static int tesseractSetPageSegMode = 1;
     static int tesseractSetOcrEngineMode = 1;
 
-    public static BufferedImage loadImage(String pathToImage) throws IOException {
-        return ImageIO.read(new File(pathToImage));
-    }
-
     public static BufferedImage imageToGrayscale(BufferedImage image, String pathToGrayscale) throws IOException {
         BufferedImage result;
-        try {
-            int width = image.getWidth();
-            int height = image.getHeight();
 
-            BufferedImage grayscaleImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-            Graphics g = grayscaleImage.getGraphics();
-            g.drawImage(image, 0, 0, null);
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        BufferedImage grayscaleImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = grayscaleImage.getGraphics();
+        g.drawImage(image, 0, 0, null);
 
 
-            ImageIO.write(grayscaleImage, "png", new File(pathToGrayscale));
-            result = grayscaleImage;
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = null;
-        }
+        ImageIO.write(grayscaleImage, "png", new File(pathToGrayscale));
+        result = grayscaleImage;
+
         return result;
     }
 
@@ -85,32 +77,6 @@ public abstract class ImageUtil {
         return croppedImage;
     }
 
-    public static BufferedImage cropImageByPixels(BufferedImage image, String outputImagePath, int[] coords) throws IOException {
-
-        int startX = coords[0];
-        int startY = coords[1];
-        int endX = coords[2];
-        int endY = coords[3];
-
-
-        int width = endX - startX;
-        int height = endY - startY;
-
-        BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int sourceX = x + startX;
-                int sourceY = y + startY;
-
-                int rgb = image.getRGB(sourceX, sourceY);
-                croppedImage.setRGB(x, y, rgb);
-            }
-        }
-        ImageIO.write(croppedImage, "png", new File(outputImagePath));
-        return croppedImage;
-    }
-
     public static String recogniseText(String pathToImage, boolean isDigitsOnly) throws TesseractException {
         Tesseract tesseract = new Tesseract();
         tesseract.setDatapath(tesseractDatapath);
@@ -129,7 +95,7 @@ public abstract class ImageUtil {
     }
 
     public static int[] searchFirstColoredPixel(BufferedImage image, int colorCode, int startX, int startY) {
-        int coords[] = new int[]{-1, -1};
+        int[] coords = new int[]{-1, -1};
         for (int x = startX; x < image.getWidth(); x++) {
             for (int y = startY; y < image.getHeight(); y++) {
 
@@ -145,7 +111,7 @@ public abstract class ImageUtil {
     }
 
     public static int[] searchLastColoredPixel(BufferedImage image, int colorCode) {
-        int coords[] = new int[]{-1, -1};
+        int[] coords = new int[]{-1, -1};
         for (int x = image.getWidth() - 1; x > 0; x--) {
             for (int y = image.getHeight() - 1; y > 0; y--) {
 
@@ -160,25 +126,18 @@ public abstract class ImageUtil {
         return coords;
     }
 
-    public static int determineQuestHeight(BufferedImage image) throws IOException {
-        int coords1[] = new int[2];
-        int coords2[] = new int[2];
+    public static int determineQuestHeight(BufferedImage image) {
+        int[] coords1 = searchFirstColoredPixel(image, -12544866, 0, 0);
+        int[] coords2 = searchFirstColoredPixel(image, -12544866, coords1[0], coords1[1] + 50);
 
-        coords1 = searchFirstColoredPixel(image, -12544866, 0, 0);
-        coords2 = searchFirstColoredPixel(image, -12544866, coords1[0], coords1[1] + 50);
-
-        int questHeight = coords2[1] - coords1[1];
-        return questHeight;
+        return coords2[1] - coords1[1];
     }
 
     public static boolean cropQuestsOnImage(BufferedImage image) throws IOException {
 
-
-        int topOuterPartY = -1;
         int questHeight = determineQuestHeight(image);
 
-        int[] firstBRPixel = new int[2];
-        firstBRPixel = searchFirstColoredPixel(image, -12544866, 0, 0);
+        int[] firstBRPixel = searchFirstColoredPixel(image, -12544866, 0, 0);
 
         image = cropImageByPixels(image, blackWhiteImagePath, firstBRPixel[0], 0, image.getWidth(), image.getHeight());
         BufferedImage grayscaleImage = imageToGrayscale(image, grayscaleImagePath);
@@ -193,7 +152,7 @@ public abstract class ImageUtil {
             int color = blackWhiteImage.getRGB(firstBRPixel[0], y); // -16777216 = black; -1 = white
             int prevColor = blackWhiteImage.getRGB(firstBRPixel[0], y + 1);
 
-            if (color == -1 && prevColor == -16777216 && foundFirstQuestH == false) {
+            if (color == -1 && prevColor == -16777216 && !foundFirstQuestH) {
                 int leftCount = firstBRPixel[0];
                 int leftPositive = 0;
                 int rightCount = blackWhiteImage.getWidth() - firstBRPixel[0];
@@ -226,7 +185,7 @@ public abstract class ImageUtil {
             }
         }
 
-        int startQuestsCounter = (int) Math.floor(firstQuestCoords[3] / questHeight);
+        int startQuestsCounter = firstQuestCoords[3] / questHeight;
         int questsCounter = startQuestsCounter;
 
         for (int i = firstQuestCoords[3]; i > questHeight; i -= questHeight) {
@@ -241,19 +200,17 @@ public abstract class ImageUtil {
             questsCounter++;
         }
 
-        return questsCounter == 9 ? true : false;
+        return questsCounter == 9;
     }
 
-    public static int determineQuestType(BufferedImage questImage) throws IOException {
+    public static int determineQuestType(BufferedImage questImage) {
 //        return:
 //        1 = BR and NBR
 //        2 = BR only
 //        3 = regular
 
-        int[] lastBRPixelCoords = new int[2];
-        int[] lastNBRPixelCoords = new int[2];
-        lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
-        lastNBRPixelCoords = searchLastColoredPixel(questImage, -16758925);
+        int[] lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
+        int[] lastNBRPixelCoords = searchLastColoredPixel(questImage, -16758925);
 
         if (lastBRPixelCoords[0] != -1 && lastNBRPixelCoords[0] != -1) {
             return 1;
@@ -262,9 +219,5 @@ public abstract class ImageUtil {
         } else {
             return 3;
         }
-    }
-
-    public static int recognisePixelColor(BufferedImage image, int x, int y) {
-        return image.getRGB(x, y);
     }
 }
