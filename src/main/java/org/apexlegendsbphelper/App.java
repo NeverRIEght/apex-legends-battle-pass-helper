@@ -9,11 +9,10 @@ import java.io.File;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hellview.fxml"));
-        FXMLLoader fxmlLoader = new FXMLLoader(new File("src/main/java/org/apexlegendsbphelper/View/example-view.fxml").toURI().toURL());
+        FXMLLoader fxmlLoader = new FXMLLoader(new File("src/main/java/org/apexlegendsbphelper/View/main-page.fxml").toURI().toURL());
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Hello!");
         stage.setScene(scene);
