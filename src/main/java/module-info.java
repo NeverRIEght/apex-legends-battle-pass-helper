@@ -6,4 +6,6 @@ module com.apexlegendsbphelper.apexlegendsbattlepasshelper {
 
     opens org.apexlegendsbphelper to javafx.fxml;
     exports org.apexlegendsbphelper;
+    exports org.apexlegendsbphelper.Controller;
+    opens org.apexlegendsbphelper.Controller to javafx.fxml;
 }
