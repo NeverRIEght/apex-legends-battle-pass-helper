@@ -1,4 +1,4 @@
-package com.apexlegendsbphelper.apexlegendsbattlepasshelper;
+package org.apexlegendsbphelper;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package com.apexlegendsbphelper.apexlegendsbattlepasshelper;
+package org.apexlegendsbphelper;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

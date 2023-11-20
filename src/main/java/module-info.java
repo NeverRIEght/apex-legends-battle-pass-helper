@@ -4,6 +4,6 @@ module com.apexlegendsbphelper.apexlegendsbattlepasshelper {
 
     requires org.controlsfx.controls;
 
-    opens com.apexlegendsbphelper.apexlegendsbattlepasshelper to javafx.fxml;
-    exports com.apexlegendsbphelper.apexlegendsbattlepasshelper;
+    opens org.apexlegendsbphelper to javafx.fxml;
+    exports org.apexlegendsbphelper;
 }
