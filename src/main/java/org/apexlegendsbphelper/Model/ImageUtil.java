@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import javax.imageio.*;
 
-import static org.apexlegendsbphelper.Main.*;
+import static org.apexlegendsbphelper.Model.Main.*;
 
 public abstract class ImageUtil {
     private static final String tesseractDatapath = System.getProperty("user.dir") + File.separator + "lib"
