@@ -241,7 +241,7 @@ public abstract class ImageUtil {
         return uniqueArray;
     }
 
-    public static Quest[] processImage(String pathToImage, int imageNumber) throws TesseractException, IOException {
+    public static Quest[] processImage(String pathToImage) throws TesseractException, IOException {
 
 
         tempFolderPath = System.getProperty("user.dir") + File.separator + "tmp";
@@ -261,7 +261,7 @@ public abstract class ImageUtil {
             System.out.println("Quests cropped with an error");
         }
 
-        Quest[] questsOnImage = new Quest[16];
+        Quest[] questsOnImage = new Quest[8];
 
         File questsDirectory = new File(tempFolderPath + File.separator + "tmpQuests");
         File[] questImages = questsDirectory.listFiles();
@@ -351,7 +351,7 @@ public abstract class ImageUtil {
 //                        System.out.println("QReward: " + questReward.trim());
 
                         Quest quest = new Quest(questNameBR, questNameNBR, questBRProgress, questReward);
-                        questsOnImage[questIndex * imageNumber] = quest;
+                        questsOnImage[questIndex] = quest;
                     }
                     case 2 -> {
                         int[] firstBRPixelCoords = searchFirstColoredPixel(questImage, -12544866, 0, 0);
@@ -400,7 +400,7 @@ public abstract class ImageUtil {
 //                        System.out.println("QReward: " + questReward.trim());
 
                         Quest quest = new Quest(questNameBR, "", questBRProgress, questReward);
-                        questsOnImage[questIndex * imageNumber] = quest;
+                        questsOnImage[questIndex] = quest;
                     }
                     case 3 -> {
 
@@ -444,7 +444,7 @@ public abstract class ImageUtil {
 //                        System.out.println("QReward: " + questReward.trim());
 
                         Quest quest = new Quest(questNameReg, "", questProgress, questReward);
-                        questsOnImage[questIndex * imageNumber] = quest;
+                        questsOnImage[questIndex] = quest;
                     }
                     default -> System.out.println("Recognition aborted, invalid quest type");
                 }
