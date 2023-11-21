@@ -18,21 +18,16 @@ public abstract class FXUtil {
 
 
         if (selectedFile != null) {
-            String pathToFile = selectedFile.getPath();
+            String pathToFile = pathFixer(selectedFile.getPath());
             return new Image(pathToFile);
         } else {
             return null;
         }
     }
-//    public static Image loadImageFromFile(File file) {
-//        try {
-//            BufferedImage bufferedImage = ImageIO.read(file);
-//            WritableImage writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
-//            SwingFXUtils.toFXImage(bufferedImage, writableImage);
-//            return writableImage;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+
+    public static String pathFixer (String inputPath) {
+        String outputPath = inputPath;
+        outputPath = "file:" + outputPath.replace("\\", "/");
+        return outputPath;
+    }
 }

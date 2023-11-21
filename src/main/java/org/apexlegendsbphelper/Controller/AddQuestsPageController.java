@@ -5,21 +5,29 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static org.apexlegendsbphelper.Model.FXUtil.openFileChooser;
 
 public class AddQuestsPageController {
     @FXML
+    private Button btnRepeatable;
+    @FXML
     private Button btnAddImage1;
     @FXML
     private Button btnAddImage2;
     @FXML
-    private Button btnRepeatable;
+    private ImageView imageViewAddImage1;
+    @FXML
+    private ImageView imageViewAddImage2;
+
 
     @FXML
     protected void onMouseClicked() throws IOException {
@@ -31,21 +39,23 @@ public class AddQuestsPageController {
         btnRepeatable.setText("Clicked!");
     }
     @FXML
-    protected void btnClickLoadImage(ActionEvent event) {
+    protected void btnClickLoadImage(ActionEvent event) throws MalformedURLException {
         Button clickedButton = (Button) event.getSource();
         String buttonId = clickedButton.getId();
 
         Image weekImage = openFileChooser();
-
-        switch (buttonId) {
-            case "btnAddImage1" -> {
-
-            }
-            case "btnAddImage2" -> {
-
-            }
-            default -> {
-
+        if(weekImage != null) {
+            switch (buttonId) {
+                case "btnAddImage1" -> {
+                    btnAddImage1.setVisible(false);
+                    imageViewAddImage1.setImage(weekImage);
+                    imageViewAddImage1.setVisible(true);
+                }
+                case "btnAddImage2" -> {
+                    btnAddImage2.setVisible(false);
+                    imageViewAddImage2.setImage(weekImage);
+                    imageViewAddImage2.setVisible(true);
+                }
             }
         }
     }
