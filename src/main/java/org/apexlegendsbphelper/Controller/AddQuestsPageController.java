@@ -27,7 +27,8 @@ public class AddQuestsPageController {
     private ImageView imageViewAddImage1;
     @FXML
     private ImageView imageViewAddImage2;
-
+    @FXML
+    private Button btnResetImages;
 
     @FXML
     protected void onMouseClicked() throws IOException {
@@ -58,5 +59,13 @@ public class AddQuestsPageController {
                 }
             }
         }
+    }
+
+    @FXML
+    protected void btnClickResetImages(ActionEvent event) {
+        btnAddImage1.setVisible(true);
+        imageViewAddImage1.setVisible(false);
+        btnAddImage2.setVisible(true);
+        imageViewAddImage2.setVisible(false);
     }
 }
