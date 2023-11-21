@@ -3,6 +3,7 @@ module com.apexlegendsbphelper.apexlegendsbattlepasshelper {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.desktop;
 
     opens org.apexlegendsbphelper to javafx.fxml;
     exports org.apexlegendsbphelper;
