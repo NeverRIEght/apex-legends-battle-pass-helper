@@ -1,25 +1,22 @@
 package org.apexlegendsbphelper.Model;
 
-import javafx.scene.image.*;
 import javafx.stage.FileChooser;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public abstract class FXUtil {
     public String pathToWeekImages = "";
-    public static Image openFileChooser() {
+    public static String openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a week image");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Изображения", "*.png"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png"));
         //fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         File selectedFile = fileChooser.showOpenDialog(null);
 
 
         if (selectedFile != null) {
-            String pathToFile = pathFixer(selectedFile.getPath());
-            return new Image(pathToFile);
+            return pathFixer(selectedFile.getPath());
         } else {
             return null;
         }

@@ -11,8 +11,6 @@ import javafx.event.ActionEvent;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static org.apexlegendsbphelper.Model.FXUtil.openFileChooser;
 
@@ -40,12 +38,16 @@ public class AddQuestsPageController {
         btnRepeatable.setText("Clicked!");
     }
     @FXML
-    protected void btnClickLoadImage(ActionEvent event) throws MalformedURLException {
+    protected void btnClickLoadImage(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
         String buttonId = clickedButton.getId();
 
-        Image weekImage = openFileChooser();
-        if(weekImage != null) {
+        String pathToWeekImage = openFileChooser();
+        if(pathToWeekImage != null) {
+            Image weekImage = new Image(pathToWeekImage);
+
+            //Quest[] questsFromImage = new Quest[16];
+
             switch (buttonId) {
                 case "btnAddImage1" -> {
                     btnAddImage1.setVisible(false);
@@ -59,10 +61,16 @@ public class AddQuestsPageController {
                 }
             }
         }
+
+
+        // Quest[] questsFromImage1 = ProcessImage(pathToWeekImage)
+        // Quest[] questsFromImage2 = ProcessImage(pathToWeekImage)
+        // ...
+
     }
 
     @FXML
-    protected void btnClickResetImages(ActionEvent event) {
+    protected void btnClickResetImages() {
         btnAddImage1.setVisible(true);
         imageViewAddImage1.setVisible(false);
         btnAddImage2.setVisible(true);
