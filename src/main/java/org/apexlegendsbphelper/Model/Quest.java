@@ -21,12 +21,8 @@ public class Quest {
         } else if (isCompleted != null && !isCompleted.trim().equals("Completed")) {
             this.isCompleted = false;
         }
-        if(questReward != null) {
-            String plus = questReward.trim().substring(0, 1);
-            String number = questReward.trim().replace("+", "");
-            if(plus.equals("+") && number.matches("[-+]?\\d+")) {
-                this.questReward = (byte) Integer.parseInt(number);
-            }
+        if(questReward != null && !questReward.isEmpty()) {
+            this.questReward = (byte) Integer.parseInt(questReward.trim());
         }
     }
 

@@ -8,11 +8,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+import net.sourceforge.tess4j.TesseractException;
+import org.apexlegendsbphelper.Model.Quest;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.apexlegendsbphelper.Model.FXUtil.openFileChooser;
+import static org.apexlegendsbphelper.Model.FXUtil.pathFixerWindows;
+import static org.apexlegendsbphelper.Model.ImageUtil.processImage;
+import static org.apexlegendsbphelper.Model.ImageUtil.removeQuestsDuplicates;
 
 public class AddQuestsPageController {
     @FXML
@@ -27,6 +32,10 @@ public class AddQuestsPageController {
     private ImageView imageViewAddImage2;
     @FXML
     private Button btnResetImages;
+    @FXML
+    private Button btnScanImages;
+    private String imagePath1 = "";
+    private String imagePath2 = "";
 
     @FXML
     protected void onMouseClicked() throws IOException {
@@ -46,18 +55,20 @@ public class AddQuestsPageController {
         if(pathToWeekImage != null) {
             Image weekImage = new Image(pathToWeekImage);
 
-            //Quest[] questsFromImage = new Quest[16];
-
             switch (buttonId) {
                 case "btnAddImage1" -> {
+                    imagePath1 = pathToWeekImage;
                     btnAddImage1.setVisible(false);
                     imageViewAddImage1.setImage(weekImage);
                     imageViewAddImage1.setVisible(true);
+                    System.out.println(pathFixerWindows(imagePath1));
                 }
                 case "btnAddImage2" -> {
+                    imagePath2 = pathToWeekImage;
                     btnAddImage2.setVisible(false);
                     imageViewAddImage2.setImage(weekImage);
                     imageViewAddImage2.setVisible(true);
+                    System.out.println(pathFixerWindows(imagePath2));
                 }
             }
         }
@@ -76,4 +87,32 @@ public class AddQuestsPageController {
         btnAddImage2.setVisible(true);
         imageViewAddImage2.setVisible(false);
     }
+
+    @FXML
+    protected void btnClickScanImages() throws TesseractException, IOException {
+        System.out.println("btnclick");
+        imagePath1 = pathFixerWindows(imagePath1);
+        imagePath2 = pathFixerWindows(imagePath2);
+        System.out.println(imagePath1);
+        System.out.println(imagePath2);
+
+        if(!imagePath1.isEmpty() && !imagePath2.isEmpty()) {
+            Quest[] quests1 = processImage(imagePath1);
+            Quest[] quests2 = processImage(imagePath2);
+            Quest[] questsAll = new Quest[16];
+
+            for(int i = 0; i < 8; i++) {
+                questsAll[i] = quests1[i];
+                questsAll[i + 8] = quests2[i];
+            }
+
+            Quest[] uniqueQuests = removeQuestsDuplicates(questsAll);
+            for (int i = 0; i < questsAll.length; i++) {
+                if(questsAll[i] != null) {
+                    System.out.println(questsAll[i].toString());
+                }
+            }
+        }
+    }
+
 }

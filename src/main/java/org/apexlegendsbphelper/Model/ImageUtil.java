@@ -226,19 +226,37 @@ public abstract class ImageUtil {
     }
 
     public static Quest[] removeQuestsDuplicates(Quest[] quests) {
-        HashSet<Quest> set = new HashSet<>();
-        int uniqueIndex = 0;
-
-        for (Quest quest : quests) {
-            if (set.add(quest)) {
-                quests[uniqueIndex++] = quest;
+        int uniqueQuestsCounter = 0;
+        for(int i = 0; i < quests.length; i++) {
+            boolean isSingle = true;
+            for(int j = 1; j < quests.length; j++) {
+                if(quests[i] != null && quests[j] != null && Objects.equals(quests[i].toString(), quests[j].toString())) {
+                    isSingle = false;
+                }
+            }
+            if(isSingle) {
+                uniqueQuestsCounter++;
             }
         }
 
-        Quest[] uniqueArray = new Quest[uniqueIndex];
-        System.arraycopy(quests, 0, uniqueArray, 0, uniqueIndex);
-
-        return uniqueArray;
+        if(uniqueQuestsCounter != 0) {
+            Quest[] uniqueArray = new Quest[uniqueQuestsCounter];
+            int arrayIndex = 0;
+            for(int i = 0; i < quests.length; i++) {
+                boolean isSingle = true;
+                for(int j = 1; j < quests.length; j++) {
+                    if(quests[i] != null && quests[j] != null && Objects.equals(quests[i].toString(), quests[j].toString())) {
+                        isSingle = false;
+                    }
+                }
+                if(isSingle) {
+                    uniqueArray[arrayIndex] = quests[i];
+                    arrayIndex++;
+                }
+            }
+            return uniqueArray;
+        }
+        return null;
     }
 
     public static Quest[] processImage(String pathToImage) throws TesseractException, IOException {

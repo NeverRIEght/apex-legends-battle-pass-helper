@@ -109,7 +109,8 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Label>
-                              <Button fx:id="btnResetImages" maxHeight="24.0" maxWidth="160.0" minHeight="24.0" mnemonicParsing="false" onAction="#btnClickResetImages" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #0E0E0E;" text="Re-add images" textFill="#e8e8e8" />
+                              <Button fx:id="btnScanImages" maxHeight="24.0" maxWidth="160.0" minHeight="24.0" mnemonicParsing="false" onAction="#btnClickScanImages" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #0E0E0E;" text="Scan Images" textFill="#e8e8e8" />
+                              <Button fx:id="btnResetImages1" maxHeight="24.0" maxWidth="160.0" minHeight="24.0" mnemonicParsing="false" onAction="#btnClickResetImages" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #0E0E0E;" text="Re-add images" textFill="#e8e8e8" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowSpan="2147483647" />

@@ -22,21 +22,14 @@ public class Main {
     public static int questsTresholdLow = 120;
 
     public static void main(String[] args) throws TesseractException, IOException {
-        Quest[] quests1 = processImage(inputFolderPath);
-        Quest[] quests2 = processImage(inputFolderPath);
-        Quest[] quests3 = new Quest[16];
-
-        for(int i = 0; i < 8; i++) {
-            quests3[i] = quests1[i];
-            quests3[i + 8] = quests2[i];
+//        Quest[] quests1 = processImage("D:\\apex-tests\\image3.png");
+        String questReward = "+5";
+        String plus = questReward.trim().substring(0, 1);
+        System.out.println(plus);
+        String number = questReward.trim().replace("+", "");
+        System.out.println(number);
+        if(plus.equals("+") && number.matches("[-+]?\\d+")) {
+            //this.questReward = (byte) Integer.parseInt(number);
         }
-
-        System.out.println(quests3.length);
-
-        Quest[] uniqueQuests = removeQuestsDuplicates(quests3);
-        for (int i = 0; i < uniqueQuests.length; i++) {
-            System.out.println(uniqueQuests[i].toString());
-        }
-
     }
 }
