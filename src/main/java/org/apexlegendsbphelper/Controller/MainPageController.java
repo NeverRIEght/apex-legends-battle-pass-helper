@@ -1,14 +1,14 @@
 package org.apexlegendsbphelper.Controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 
 public class MainPageController {
     @FXML
-    private Label welcomeText;
+    private Button btnRepeatable;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    protected void onMouseClicked() {
+        btnRepeatable.setText("Clicked!");
     }
 }
