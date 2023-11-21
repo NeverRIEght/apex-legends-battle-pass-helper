@@ -195,12 +195,12 @@ public abstract class ImageUtil {
 
         questsCounter = startQuestsCounter;
 
-        for (int i = firstQuestCoords[3]; i < image.getHeight(); i += questHeight) {
+        for (int i = firstQuestCoords[3]; i <= image.getHeight(); i += questHeight) {
             cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, image.getWidth(), i);
             questsCounter++;
         }
 
-        return questsCounter == 8;
+        return questsCounter == 9;
     }
 
     public static int determineQuestType(BufferedImage questImage) {
