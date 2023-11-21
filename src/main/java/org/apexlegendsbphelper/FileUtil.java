@@ -36,5 +36,8 @@ public class FileUtil {
         new File(tempFolderPath + File.separator + "tmpQuestsNBR").mkdirs();
         new File(tempFolderPath + File.separator + "tmpQuestsReward").mkdirs();
         new File(tempFolderPath + File.separator + "tmpQuestsReg").mkdirs();
+        new File(tempFolderPath + File.separator + "tmpQuestsBRProgress").mkdirs();
+        new File(tempFolderPath + File.separator + "tmpQuestsNBRProgress").mkdirs();
+        new File(tempFolderPath + File.separator + "tmpQuestsRegProgress").mkdirs();
     }
 }

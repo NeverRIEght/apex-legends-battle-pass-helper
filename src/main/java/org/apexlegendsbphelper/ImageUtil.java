@@ -200,7 +200,7 @@ public abstract class ImageUtil {
             questsCounter++;
         }
 
-        return questsCounter == 9;
+        return questsCounter == 8;
     }
 
     public static int determineQuestType(BufferedImage questImage) {
