@@ -24,7 +24,7 @@ public class FileUtil {
         return false;
     }
 
-    public static void recreateDirectories(String tempFolderPath) {
+    public static void recreateTempDirectories(String tempFolderPath) {
 
         if (new File(tempFolderPath).exists()) {
             deleteDirectory(new File(tempFolderPath));

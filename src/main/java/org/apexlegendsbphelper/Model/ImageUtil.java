@@ -8,8 +8,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Objects;
 import javax.imageio.*;
 
+import static org.apexlegendsbphelper.Model.FileUtil.recreateTempDirectories;
 import static org.apexlegendsbphelper.Model.Main.*;
 
 public abstract class ImageUtil {
@@ -20,6 +23,7 @@ public abstract class ImageUtil {
     private static final String tesseractSetDigits = "digits";
     static int tesseractSetPageSegMode = 1;
     static int tesseractSetOcrEngineMode = 1;
+
 
     public static BufferedImage imageToGrayscale(BufferedImage image, String pathToGrayscale) throws IOException {
         BufferedImage result;
@@ -219,5 +223,233 @@ public abstract class ImageUtil {
         } else {
             return 3;
         }
+    }
+
+    public static Quest[] removeQuestsDuplicates(Quest[] quests) {
+        HashSet<Quest> set = new HashSet<>();
+        int uniqueIndex = 0;
+
+        for (Quest quest : quests) {
+            if (set.add(quest)) {
+                quests[uniqueIndex++] = quest;
+            }
+        }
+
+        Quest[] uniqueArray = new Quest[uniqueIndex];
+        System.arraycopy(quests, 0, uniqueArray, 0, uniqueIndex);
+
+        return uniqueArray;
+    }
+
+    public static Quest[] processImage(String pathToImage, int imageNumber) throws TesseractException, IOException {
+
+
+        tempFolderPath = System.getProperty("user.dir") + File.separator + "tmp";
+        grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
+        blackWhiteImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
+
+
+        recreateTempDirectories(tempFolderPath);
+
+        BufferedImage inputImage = ImageIO.read(new File(pathToImage));
+        BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
+        imageToBlackWhite(grayscaleImage, blackWhiteImagePath, imageTreshold);
+
+        if (cropQuestsOnImage(inputImage)) {
+            System.out.println("Quests cropped successfully");
+        } else {
+            System.out.println("Quests cropped with an error");
+        }
+
+        Quest[] questsOnImage = new Quest[16];
+
+        File questsDirectory = new File(tempFolderPath + File.separator + "tmpQuests");
+        File[] questImages = questsDirectory.listFiles();
+        for (int questIndex = 0; questIndex < Objects.requireNonNull(questImages).length; questIndex++) {
+            if (questImages[questIndex].isFile() && questImages[questIndex].getName().endsWith(".png")) {
+
+                BufferedImage questImage = ImageIO.read(questImages[questIndex]);
+
+                System.out.println(questImages[questIndex].getName());
+                int questType = determineQuestType(questImage);
+
+                int currentTreshold = questsTresholdHigh;
+
+                switch (questType) {
+                    case 1 -> {
+                        int[] firstNBRPixelCoords = searchFirstColoredPixel(questImage, -16758925, 0, 0);
+                        int[] lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
+                        int[] lastNBRPixelCoords = searchLastColoredPixel(questImage, -16758925);
+
+                        lastBRPixelCoords[0] += 2;
+                        lastBRPixelCoords[1] += 2;
+                        lastNBRPixelCoords[0] += 2;
+                        lastNBRPixelCoords[1] += 2;
+                        firstNBRPixelCoords[0] -= 2;
+
+                        // Cut: Name BR
+
+                        BufferedImage questBRPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastBRPixelCoords[0], 0, firstNBRPixelCoords[0], lastBRPixelCoords[1]);
+                        questBRPart = cropImageByPixels(questBRPart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", 0, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+
+                        // Cut: Name NBR
+
+                        BufferedImage questNBRPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastNBRPixelCoords[0], 0, questImage.getWidth(), lastNBRPixelCoords[1]);
+                        questNBRPart = cropImageByPixels(questNBRPart, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", 0, 0, questNBRPart.getWidth() - questNBRPart.getWidth() / 5, questNBRPart.getHeight());
+
+                        // Cut: Status BR
+
+                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", 0, (questImage.getHeight() - questImage.getHeight() / 10 * 6), firstNBRPixelCoords[0], questImage.getHeight());
+                        questBRProgressPart = cropImageByPixels(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questBRPart.getHeight() / 5 * 4, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+
+                        // Cut: Status NBR
+
+                        BufferedImage questNBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() / 100 * 53, (questImage.getHeight() - questImage.getHeight() / 10 * 6), questImage.getWidth(), questImage.getHeight());
+                        questNBRProgressPart = cropImageByPixels(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questNBRProgressPart.getWidth() / 100 * 1, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+
+                        // Cut: Reward
+
+                        BufferedImage questRewardPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
+
+                        // Determine Treshold
+                        // Recognise: BR Progress
+
+                        imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                        String questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        if (questBRProgress.trim().isEmpty()) {
+                            currentTreshold = questsTresholdLow;
+                            imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                            questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        }
+
+                        // Recognise: NBR Progress
+
+                        imageToBlackWhite(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                        String questNBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+
+                        // Recognise: BR Name
+
+                        imageToBlackWhite(questBRPart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
+                        String questNameBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+                        // Recognise: NBR Name
+
+                        imageToBlackWhite(questNBRPart, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
+                        String questNameNBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+                        // Recognise: Reward
+
+                        imageToBlackWhite(questRewardPart, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
+                        String questReward = recogniseText(tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+                        // Output
+
+//                        System.out.println("QNameBR: " + questNameBR.trim());
+//                        System.out.println("QNameNBR: " + questNameNBR.trim());
+//                        System.out.println("QBRProgress: " + questBRProgress.trim());
+//                        System.out.println("QNBRProgress: " + questNBRProgress.trim());
+//                        System.out.println("QReward: " + questReward.trim());
+
+                        Quest quest = new Quest(questNameBR, questNameNBR, questBRProgress, questReward);
+                        questsOnImage[questIndex * imageNumber] = quest;
+                    }
+                    case 2 -> {
+                        int[] firstBRPixelCoords = searchFirstColoredPixel(questImage, -12544866, 0, 0);
+                        int[] lastBRPixelCoords = searchLastColoredPixel(questImage, -12544866);
+
+                        lastBRPixelCoords[0] += 2;
+                        lastBRPixelCoords[1] += 2;
+
+                        // Cut: Name BR
+
+                        BufferedImage questNamePart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastBRPixelCoords[0], firstBRPixelCoords[1], questImage.getWidth() - questImage.getWidth() / 100 * 12, lastBRPixelCoords[1]);
+
+                        // Cut: Status BR
+
+                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", 0, (questImage.getHeight() - questImage.getHeight() / 10 * 5) / 5 * 4, questImage.getWidth(), questImage.getHeight() / 10 * 8);
+                        questBRProgressPart = cropImageByPixels(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questBRProgressPart.getWidth() / 100 * 2, 0, questBRProgressPart.getWidth() - questBRProgressPart.getWidth() / 5, questBRProgressPart.getHeight());
+
+                        // Cut: Reward
+
+                        BufferedImage questRewardPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
+
+                        // Determine Treshold
+                        // Recognise: BR Progress
+
+                        imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                        String questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        if (questBRProgress.trim().isEmpty()) {
+                            currentTreshold = questsTresholdLow;
+                            imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                            questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        }
+
+                        // Recognise: BR Name
+
+                        imageToBlackWhite(questNamePart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", questsTresholdHigh);
+                        String questNameBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+                        // Recognise: Reward
+
+                        imageToBlackWhite(questRewardPart, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questsTresholdHigh);
+                        String questReward = recogniseText(tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+
+//                        System.out.println("QNameBR: " + questNameBR.trim());
+//                        System.out.println("QBRProgress: " + questBRProgress.trim());
+//                        System.out.println("QReward: " + questReward.trim());
+
+                        Quest quest = new Quest(questNameBR, "", questBRProgress, questReward);
+                        questsOnImage[questIndex * imageNumber] = quest;
+                    }
+                    case 3 -> {
+
+                        // Cut: Name
+
+                        BufferedImage questNamePart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReg" + File.separator + "quest" + (questIndex + 1) + ".png", 0, 0, questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() - questImage.getHeight() / 2);
+
+                        // Cut: Status
+//
+                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", 0, (questImage.getHeight() - questImage.getHeight() / 10 * 5) / 5 * 4, questImage.getWidth(), questImage.getHeight() / 10 * 8);
+                        questBRProgressPart = cropImageByPixels(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questBRProgressPart.getWidth() / 100 * 2, 0, questBRProgressPart.getWidth() - questBRProgressPart.getWidth() / 5, questBRProgressPart.getHeight());
+
+                        // Cut: Reward
+
+                        BufferedImage questRewardPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
+
+                        // Determine Treshold
+                        // Recognise: Progress
+
+                        imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                        String questProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        if (questProgress.trim().isEmpty()) {
+                            currentTreshold = questsTresholdLow;
+                            imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
+                            questProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        }
+
+                        // Recognise: Name
+
+                        imageToBlackWhite(questNamePart, tempFolderPath + File.separator + "tmpQuestsReg" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
+                        String questNameReg = recogniseText(tempFolderPath + File.separator + "tmpQuestsReg" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+                        // Recognise: Reward
+
+                        imageToBlackWhite(questRewardPart, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
+                        String questReward = recogniseText(tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+
+
+//                        System.out.println("QNameReg: " + questNameReg.trim());
+//                        System.out.println("QProgress: " + questProgress.trim());
+//                        System.out.println("QReward: " + questReward.trim());
+
+                        Quest quest = new Quest(questNameReg, "", questProgress, questReward);
+                        questsOnImage[questIndex * imageNumber] = quest;
+                    }
+                    default -> System.out.println("Recognition aborted, invalid quest type");
+                }
+            }
+        }
+        return questsOnImage;
     }
 }
