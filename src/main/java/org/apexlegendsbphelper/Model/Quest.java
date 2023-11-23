@@ -2,6 +2,8 @@ package org.apexlegendsbphelper.Model;
 
 import java.util.Objects;
 
+import static org.apexlegendsbphelper.Model.FileUtil.addQuestToDictionary;
+
 public class Quest {
     private String questNameBR;
     private String questNameNBR;
@@ -11,9 +13,12 @@ public class Quest {
         if (questNameBR != null && questNameNBR != null) {
             if(!questNameBR.isEmpty()) {
                 this.questNameBR = questNameBR.trim();
+                this.questNameBR = this.questNameBR.replace(".", ",");
+
             }
             if(!questNameNBR.isEmpty()) {
                 this.questNameNBR = questNameNBR.trim();
+                //this.questNameNBR = this.questNameNBR.replace(",", ".");
             }
         }
         if (isCompleted != null && isCompleted.trim().equals("Completed")) {
@@ -24,6 +29,7 @@ public class Quest {
         if(questReward != null && !questReward.isEmpty()) {
             this.questReward = (byte) Integer.parseInt(questReward.trim());
         }
+        addQuestToDictionary(this.questNameBR);
     }
 
     public String getQuestNameBR() {
