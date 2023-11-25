@@ -41,25 +41,15 @@ public class Quest {
         String dictionaryQuestName = returnArray[2];
 
         String[] questNameSplitted = questName.split(" ");
-        System.out.println("Ищем строку: " + questName);
-        String dictionaryOccur = searchInDictionary(dictionaryQuestName);
-        if(dictionaryOccur != null) {
-            questName = dictionaryOccur.replace("$", questNameSplitted[Integer.parseInt(returnArray[1])]);
-            questNameSplitted = questName.split(" ");
-        }
+//        System.out.println("Ищем строку: " + questName);
+//        String dictionaryOccur = searchInDictionary(dictionaryQuestName);
+//        if(dictionaryOccur != null) {
+//            questName = dictionaryOccur.replace("$", questNameSplitted[Integer.parseInt(returnArray[1])]);
+//            questNameSplitted = questName.split(" ");
+//        }
 
         if(returnArray[0].equals("true")) {
             addQuestToDictionary(dictionaryQuestName);
-
-            for(int i = 0; i < questNameSplitted.length; i++) {
-                if(i != Integer.parseInt(returnArray[1])) {
-                    for(int j = 0; j < questNameSplitted[i].length(); j++) {
-                        if(Character.isDigit(questNameSplitted[i].charAt(j)) && questNameSplitted[i].charAt(j) == '0') {
-                            questNameSplitted[j] = "O";
-                        }
-                    }
-                }
-            }
 
             questName = "";
             for(String word : questNameSplitted) {
