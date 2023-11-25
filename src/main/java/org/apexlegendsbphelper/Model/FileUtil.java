@@ -1,9 +1,10 @@
 package org.apexlegendsbphelper.Model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.apexlegendsbphelper.Model.StringUtil.stringsEqualsProbability;
 
 public class FileUtil {
     public static boolean deleteDirectory(File directory) {
@@ -79,9 +80,54 @@ public class FileUtil {
             bufferedWriter.newLine();
             bufferedWriter.write(finalQuestName);
 
-            System.out.println("Фраза добавлена в файл.");
+            System.out.println("Added quest to dictionary");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void sortDictionary() throws IOException {
+        createDictionaryFile();
+        try {
+            // Читаем все строки из файла
+            BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + File.separator + "data" + File.separator + "questsDictionary.txt"));
+            Set<String> uniquePhrases = new HashSet<>();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                uniquePhrases.add(line);
+            }
+            reader.close();
+
+            // Перезаписываем файл с уникальными строками
+            BufferedWriter writer = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + File.separator + "data" + File.separator + "questsDictionary.txt"));
+            for (String phrase : uniquePhrases) {
+                writer.write(phrase);
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String searchInDictionary(String questName) throws IOException {
+        createDictionaryFile();
+        try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + File.separator + "data" + File.separator + "questsDictionary.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if(stringsEqualsProbability(line, questName) >= 75) {
+                    System.out.println("Строка \"" + questName + "\" найдена на картинке");
+                    System.out.println("Строка \"" + line + "\" найдена в файле.");
+                    System.out.println("Вероятность: " + stringsEqualsProbability(line, questName) + "%");
+                    return line;
+                }
+            }
+            System.out.println("Строка \"" + questName + "\" не найдена в файле.");
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

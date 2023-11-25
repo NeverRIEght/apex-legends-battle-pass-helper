@@ -23,6 +23,7 @@ public class Main {
     public static int questsTresholdLow = 120;
 
     public static void main(String[] args) throws TesseractException, IOException {
+        sortDictionary();
         Quest[] quests1 = processImage("D:\\apex-tests\\testdata1.png");
         Quest[] quests2 = processImage("D:\\apex-tests\\testdata2.png");
 
@@ -30,18 +31,15 @@ public class Main {
         System.arraycopy(quests1, 0, quests3, 0, quests1.length);
         System.arraycopy(quests2, 0, quests3, quests1.length, quests2.length);
 
-        int finalQuestsCount = 0;
         for(int i = 0; i < quests3.length; i++) {
             for(int j = i + 1; j < quests3.length; j++) {
-                if(stringsEqualsProbability(quests3[i].getQuestNameBR(), quests3[j].getQuestNameBR()) >= 70) {
-//                    System.out.println("--------------------");
-//                    System.out.println("First quest: " + quests3[i].getQuestNameBR());
-//                    System.out.println("Second quest: " + quests3[j].getQuestNameBR());
-//                    System.out.println("Probability: " + stringsEqualsProbability(quests3[i].getQuestNameBR(), quests3[j].getQuestNameBR()));
-                    quests3[i].setQuestNameBR(null);
+                if(stringsEqualsProbability(quests3[i].getQuestNameBR(), quests3[j].getQuestNameBR()) >= 75) {
+                    quests3[j].setQuestNameBR(null);
                 }
             }
         }
+
+        int finalQuestsCount = 0;
         for(int i = 0; i < quests3.length; i++) {
             if(quests3[i].getQuestNameBR() != null) {
                 finalQuestsCount++;
@@ -50,6 +48,7 @@ public class Main {
 
         Quest[] finalQuests = new Quest[finalQuestsCount];
         int finalIndex = 0;
+
         for(int i = 0; i < quests3.length; i++) {
             if(quests3[i].getQuestNameBR() != null) {
                 finalQuests[finalIndex] = quests3[i];
@@ -58,5 +57,6 @@ public class Main {
                 finalIndex++;
             }
         }
+        sortDictionary();
     }
 }

@@ -1,16 +1,18 @@
 package org.apexlegendsbphelper.Model;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.nio.charset.StandardCharsets;
 
 import static org.apexlegendsbphelper.Model.FileUtil.addQuestToDictionary;
+import static org.apexlegendsbphelper.Model.FileUtil.searchInDictionary;
 
 public class Quest {
     private String questNameBR;
     private String questNameNBR;
     private boolean isCompleted;
     private byte questReward;
-    Quest(String questNameBR, String questNameNBR, String isCompleted, String questReward) {
+    Quest(String questNameBR, String questNameNBR, String isCompleted, String questReward) throws IOException {
         if (questNameBR != null && questNameNBR != null) {
             if(!questNameBR.isEmpty()) {
                 this.questNameBR = processQuestName(questNameBR);
@@ -31,42 +33,82 @@ public class Quest {
         }
     }
 
-    private String processQuestName(String questName) {
+    private String processQuestName(String questName) throws IOException {
         questName = questName.trim();
-
         questName = questName.replace(".", ",");
+
+        String[] returnArray = replaceNumberWithDollar(questName);
+        String dictionaryQuestName = returnArray[2];
+
+        String[] questNameSplitted = questName.split(" ");
+        System.out.println("Ищем строку: " + questName);
+        String dictionaryOccur = searchInDictionary(dictionaryQuestName);
+        if(dictionaryOccur != null) {
+            questName = dictionaryOccur.replace("$", questNameSplitted[Integer.parseInt(returnArray[1])]);
+            questNameSplitted = questName.split(" ");
+        }
+
+        if(returnArray[0].equals("true")) {
+            addQuestToDictionary(dictionaryQuestName);
+
+            for(int i = 0; i < questNameSplitted.length; i++) {
+                if(i != Integer.parseInt(returnArray[1])) {
+                    for(int j = 0; j < questNameSplitted[i].length(); j++) {
+                        if(Character.isDigit(questNameSplitted[i].charAt(j)) && questNameSplitted[i].charAt(j) == '0') {
+                            questNameSplitted[j] = "O";
+                        }
+                    }
+                }
+            }
+
+            questName = "";
+            for(String word : questNameSplitted) {
+                questName += word + " ";
+            }
+            questName = questName.trim();
+        }
+
         return questName;
-//        String[] questNameWords = questName.split(" ");
-//
-//        int numberIndex = -1;
-//        for(int i = 0; i < questNameWords.length; i++) {
-//            String tempWord = questNameWords[i];
-//            tempWord = tempWord.replace(",", "");
-//            tempWord = tempWord.replace(".", "");
-//            tempWord = tempWord.replace("o", "0");
-//            tempWord = tempWord.replace("O", "0");
-//            try {
-//                Integer.parseInt(tempWord);
-//            } catch (NumberFormatException e) {
-//                continue;
-//            }
-//            numberIndex = i;
-//            break;
-//        }
-//        if(numberIndex != -1) {
-//            questNameWords[numberIndex] = "$";
-//            String dictionaryQuestName = "";
-//            for(String word : questNameWords) {
-//                dictionaryQuestName += word + " ";
-//            }
-//            dictionaryQuestName = dictionaryQuestName.trim();
-//
-//            addQuestToDictionary(dictionaryQuestName);
-//            return questName;
-//        } else {
-//            System.out.println("Quest name is not valid: " + questName);
-//            return questName;
-//        }
+    }
+
+    private String[] replaceNumberWithDollar(String inputString) {
+        inputString = inputString.trim();
+        String ouputString = inputString;
+        String[] outputArray = new String[3];
+
+        String[] ouputStringSplitted = ouputString.split(" ");
+
+        int numberIndex = -1;
+        for(int i = 0; i < ouputStringSplitted.length; i++) {
+            String tempWord = ouputStringSplitted[i];
+            tempWord = tempWord.replace(",", "");
+            tempWord = tempWord.replace(".", "");
+            tempWord = tempWord.replace("o", "0");
+            tempWord = tempWord.replace("O", "0");
+            try {
+                Integer.parseInt(tempWord);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            numberIndex = i;
+            break;
+        }
+
+        if(numberIndex != -1) {
+            outputArray[0] = "true";
+            outputArray[1] = numberIndex + "";
+            ouputStringSplitted[numberIndex] = "$";
+            ouputString = "";
+            for(String word : ouputStringSplitted) {
+                ouputString += word + " ";
+            }
+            ouputString = ouputString.trim();
+        } else {
+            outputArray[0] = "false";
+            outputArray[1] = "";
+        }
+        outputArray[2] = ouputString;
+        return outputArray;
     }
 
     public String getQuestNameBR() {
@@ -99,22 +141,6 @@ public class Quest {
 
     public void setQuestReward(byte questReward) {
         this.questReward = questReward;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Quest quest = (Quest) o;
-        return isCompleted == quest.isCompleted &&
-                questReward == quest.questReward &&
-                Objects.equals(questNameBR, quest.questNameBR) &&
-                Objects.equals(questNameNBR, quest.questNameNBR);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(questNameBR, questNameNBR, isCompleted, questReward);
     }
 
     @Override
