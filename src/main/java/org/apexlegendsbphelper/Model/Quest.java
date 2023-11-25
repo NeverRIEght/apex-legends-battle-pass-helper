@@ -19,11 +19,13 @@ public class Quest {
                 this.questNameNBR = processQuestName(questNameNBR);
             }
         }
+
         if (isCompleted != null && isCompleted.trim().equals("Completed")) {
             this.isCompleted = true;
         } else if (isCompleted != null && !isCompleted.trim().equals("Completed")) {
             this.isCompleted = false;
         }
+
         if(questReward != null && !questReward.isEmpty()) {
             this.questReward = (byte) Integer.parseInt(questReward.trim());
         }
@@ -33,38 +35,38 @@ public class Quest {
         questName = questName.trim();
 
         questName = questName.replace(".", ",");
-
-        String[] questNameWords = questName.split(" ");
-
-        int numberIndex = -1;
-        for(int i = 0; i < questNameWords.length; i++) {
-            String tempWord = questNameWords[i];
-            tempWord = tempWord.replace(",", "");
-            tempWord = tempWord.replace(".", "");
-            tempWord = tempWord.replace("o", "0");
-            tempWord = tempWord.replace("O", "0");
-            try {
-                Integer.parseInt(tempWord);
-            } catch (NumberFormatException e) {
-                continue;
-            }
-            numberIndex = i;
-            break;
-        }
-        if(numberIndex != -1) {
-            questNameWords[numberIndex] = "$";
-            String dictionaryQuestName = "";
-            for(String word : questNameWords) {
-                dictionaryQuestName += word + " ";
-            }
-            dictionaryQuestName = dictionaryQuestName.trim();
-
-            addQuestToDictionary(dictionaryQuestName);
-            return questName;
-        } else {
-            System.out.println("Quest name is not valid: " + questName);
-        }
-        return null;
+        return questName;
+//        String[] questNameWords = questName.split(" ");
+//
+//        int numberIndex = -1;
+//        for(int i = 0; i < questNameWords.length; i++) {
+//            String tempWord = questNameWords[i];
+//            tempWord = tempWord.replace(",", "");
+//            tempWord = tempWord.replace(".", "");
+//            tempWord = tempWord.replace("o", "0");
+//            tempWord = tempWord.replace("O", "0");
+//            try {
+//                Integer.parseInt(tempWord);
+//            } catch (NumberFormatException e) {
+//                continue;
+//            }
+//            numberIndex = i;
+//            break;
+//        }
+//        if(numberIndex != -1) {
+//            questNameWords[numberIndex] = "$";
+//            String dictionaryQuestName = "";
+//            for(String word : questNameWords) {
+//                dictionaryQuestName += word + " ";
+//            }
+//            dictionaryQuestName = dictionaryQuestName.trim();
+//
+//            addQuestToDictionary(dictionaryQuestName);
+//            return questName;
+//        } else {
+//            System.out.println("Quest name is not valid: " + questName);
+//            return questName;
+//        }
     }
 
     public String getQuestNameBR() {
