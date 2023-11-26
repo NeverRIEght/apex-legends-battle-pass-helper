@@ -5,6 +5,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class StringUtil {
+    public static String pathFixerLinux (String inputPath) {
+        String outputPath = inputPath;
+        if(!outputPath.contains("file:")) {
+            outputPath = "file:" + outputPath;
+        }
+        outputPath = outputPath.replace("\\", "/");
+        return outputPath;
+    }
+
+    public static String pathFixerWindows (String inputPath) {
+        String outputPath = inputPath;
+        if(outputPath.contains("file:")) {
+            outputPath = outputPath.substring(5);
+        }
+        outputPath = outputPath.replace("/", "\\");
+        return outputPath;
+    }
+
     public static double stringsEqualsProbability(String string1, String string2) {
         double probability = 0;
         if(string1 == null || string2 == null) {
@@ -54,14 +72,14 @@ public abstract class StringUtil {
     }
 
     public static boolean checkForNumber(String inputString) {
-        if(getNumberPosition(inputString) == -1 || inputString == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return getNumberPosition(inputString) != -1 && inputString != null;
     }
 
     public static String replaceNumberWithDollar(String inputString) {
+        if(inputString == null) {
+            return null;
+        }
+
         String outputString = inputString;
         outputString = outputString.trim();
 
@@ -79,24 +97,6 @@ public abstract class StringUtil {
         } else {
             return null;
         }
-    }
-
-    public static String pathFixerLinux (String inputPath) {
-        String outputPath = inputPath;
-        if(!outputPath.contains("file:")) {
-            outputPath = "file:" + outputPath;
-        }
-        outputPath.replace("\\", "/");
-        return outputPath;
-    }
-
-    public static String pathFixerWindows (String inputPath) {
-        String outputPath = inputPath;
-        if(outputPath.contains("file:")) {
-            outputPath = outputPath.substring(5);
-        }
-        outputPath.replace("/", "\\");
-        return outputPath;
     }
 
     public static String replaceOWithZero (String inputString) {
@@ -135,8 +135,6 @@ public abstract class StringUtil {
 
         String outputString = inputString;
         outputString = outputString.trim();
-        System.out.println("replace");
-        System.out.println(outputString);
 
         if(checkForNumber(outputString)) {
             int numberPosition = getNumberPosition(outputString);
@@ -148,8 +146,6 @@ public abstract class StringUtil {
             }
             outputString = outputString.trim();
         }
-
-        System.out.println(outputString);
 
         return outputString;
     }

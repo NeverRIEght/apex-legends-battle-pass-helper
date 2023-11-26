@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
-import java.util.HashSet;
 import java.util.Objects;
 import javax.imageio.*;
 
@@ -225,42 +224,7 @@ public abstract class ImageUtil {
         }
     }
 
-    public static Quest[] removeQuestsDuplicates(Quest[] quests) {
-        int uniqueQuestsCounter = 0;
-        for(int i = 0; i < quests.length; i++) {
-            boolean isSingle = true;
-            for(int j = 1; j < quests.length; j++) {
-                if(quests[i] != null && quests[j] != null && Objects.equals(quests[i].toString(), quests[j].toString())) {
-                    isSingle = false;
-                }
-            }
-            if(isSingle) {
-                uniqueQuestsCounter++;
-            }
-        }
-
-        if(uniqueQuestsCounter != 0) {
-            Quest[] uniqueArray = new Quest[uniqueQuestsCounter];
-            int arrayIndex = 0;
-            for(int i = 0; i < quests.length; i++) {
-                boolean isSingle = true;
-                for(int j = 1; j < quests.length; j++) {
-                    if(quests[i] != null && quests[j] != null && Objects.equals(quests[i].toString(), quests[j].toString())) {
-                        isSingle = false;
-                    }
-                }
-                if(isSingle) {
-                    uniqueArray[arrayIndex] = quests[i];
-                    arrayIndex++;
-                }
-            }
-            return uniqueArray;
-        }
-        return null;
-    }
-
     public static Quest[] processImage(String pathToImage) throws TesseractException, IOException {
-
 
         tempFolderPath = System.getProperty("user.dir") + File.separator + "tmp";
         grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
@@ -323,7 +287,7 @@ public abstract class ImageUtil {
                         // Cut: Status NBR
 
                         BufferedImage questNBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() / 100 * 53, (questImage.getHeight() - questImage.getHeight() / 10 * 6), questImage.getWidth(), questImage.getHeight());
-                        questNBRProgressPart = cropImageByPixels(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questNBRProgressPart.getWidth() / 100 * 1, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+                        questNBRProgressPart = cropImageByPixels(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questNBRProgressPart.getWidth() / 100, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
 
                         // Cut: Reward
 

@@ -14,6 +14,7 @@ public abstract class MainUI {
         imagePath2 = pathFixerWindows(imagePath2);
 
 
+
         if(!imagePath1.isEmpty() && !imagePath2.isEmpty()) {
             sortDictionary();
             Quest[] quests1 = processImage(imagePath1);
@@ -22,6 +23,7 @@ public abstract class MainUI {
             for(int i = 0; i < quests1.length; i++) {
                 boolean isBRHasNumber = checkForNumber(quests1[i].getQuestNameBR());
                 boolean isNBRHasNumber = checkForNumber(quests1[i].getQuestNameNBR());
+
                 //if one of the quests in quests2 has the same name as quest1 and has a number in its name,
                 //than we replace quest1 name with quest2 name
 
@@ -54,8 +56,8 @@ public abstract class MainUI {
             }
 
             int finalQuestsCount = 0;
-            for(int i = 0; i < quests3.length; i++) {
-                if(quests3[i].getQuestNameBR() != null) {
+            for (Quest quest : quests3) {
+                if (quest.getQuestNameBR() != null) {
                     finalQuestsCount++;
                 }
             }
@@ -63,19 +65,19 @@ public abstract class MainUI {
             Quest[] finalQuests = new Quest[finalQuestsCount];
             int finalIndex = 0;
 
-            for(int i = 0; i < quests3.length; i++) {
-                if(quests3[i].getQuestNameBR() != null) {
-                    finalQuests[finalIndex] = quests3[i];
+            for (Quest quest : quests3) {
+                if (quest.getQuestNameBR() != null) {
+                    finalQuests[finalIndex] = quest;
                     finalIndex++;
                 }
             }
 
-            for(int i = 0; i < finalQuests.length; i++) {
-                finalQuests[i].setQuestNameBR(removeCommaFromNumber(finalQuests[i].getQuestNameBR()));
-                finalQuests[i].setQuestNameNBR(removeCommaFromNumber(finalQuests[i].getQuestNameNBR()));
+            for (Quest quest : finalQuests) {
+                quest.setQuestNameBR(removeCommaFromNumber(quest.getQuestNameBR()));
+                quest.setQuestNameNBR(removeCommaFromNumber(quest.getQuestNameNBR()));
 
-                finalQuests[i].setQuestNameBR(replaceOWithZero(finalQuests[i].getQuestNameBR()));
-                finalQuests[i].setQuestNameNBR(replaceOWithZero(finalQuests[i].getQuestNameNBR()));
+                quest.setQuestNameBR(replaceOWithZero(quest.getQuestNameBR()));
+                quest.setQuestNameNBR(replaceOWithZero(quest.getQuestNameNBR()));
             }
 
             sortDictionary();

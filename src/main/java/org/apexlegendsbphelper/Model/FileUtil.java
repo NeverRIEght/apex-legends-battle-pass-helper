@@ -1,11 +1,8 @@
 package org.apexlegendsbphelper.Model;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.apexlegendsbphelper.Model.DictionaryUtil.createDictionaryFile;
-import static org.apexlegendsbphelper.Model.StringUtil.stringsEqualsProbability;
 
 public class FileUtil {
     public static boolean deleteDirectory(File directory) {

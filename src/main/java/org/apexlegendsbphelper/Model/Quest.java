@@ -1,19 +1,13 @@
 package org.apexlegendsbphelper.Model;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.nio.charset.StandardCharsets;
-
-import static org.apexlegendsbphelper.Model.DictionaryUtil.addQuestToDictionary;
-import static org.apexlegendsbphelper.Model.DictionaryUtil.searchDictionary;
-import static org.apexlegendsbphelper.Model.StringUtil.replaceNumberWithDollar;
 
 public class Quest {
     private String questNameBR;
     private String questNameNBR;
     private boolean isCompleted;
     private byte questReward;
-    Quest(String questNameBR, String questNameNBR, String isCompleted, String questReward) throws IOException {
+    Quest(String questNameBR, String questNameNBR, String isCompleted, String questReward) {
         if (questNameBR != null && questNameNBR != null) {
             if(!questNameBR.isEmpty()) {
                 questNameBR = questNameBR.trim();

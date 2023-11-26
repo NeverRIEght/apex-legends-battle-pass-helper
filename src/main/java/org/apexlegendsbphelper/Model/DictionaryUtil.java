@@ -7,15 +7,6 @@ import java.util.Set;
 import static org.apexlegendsbphelper.Model.StringUtil.*;
 
 public abstract class DictionaryUtil {
-    public static String checkInDictionary (String questName) throws IOException {
-        String dictionaryQuestName = replaceNumberWithDollar(questName);
-        if(dictionaryQuestName == null) {
-            //Числа в строке нет - нужно найти аналог в словаре, взять из другого массива или попросить у пользователя
-        } else {
-            addQuestToDictionary(dictionaryQuestName);
-        }
-        return questName;
-    }
 
     public static void createDictionaryFile() throws IOException {
         File dictionaryFile = new File(System.getProperty("user.dir") + File.separator + "data", "questsDictionary.txt");

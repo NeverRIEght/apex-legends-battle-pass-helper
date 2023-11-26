@@ -1,18 +1,8 @@
 package org.apexlegendsbphelper.Model;
 
-import static org.apexlegendsbphelper.Model.DictionaryUtil.sortDictionary;
-import static org.apexlegendsbphelper.Model.FileUtil.*;
-import static org.apexlegendsbphelper.Model.ImageUtil.*;
 import static org.apexlegendsbphelper.Model.MainUI.processWeekImages;
-import static org.apexlegendsbphelper.Model.StringUtil.*;
-
 import net.sourceforge.tess4j.TesseractException;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 
 public class Main {
@@ -27,8 +17,8 @@ public class Main {
     public static void main(String[] args) throws TesseractException, IOException {
         Quest[] quests1 = processWeekImages("D:\\apex-tests\\testdata1.png", "D:\\apex-tests\\testdata2.png");
 
-        for(int i = 0; i < quests1.length; i++) {
-            System.out.println(quests1[i].getQuestNameBR());
+        for (Quest quest : quests1) {
+            System.out.println(quest.getQuestNameBR());
         }
     }
 }
