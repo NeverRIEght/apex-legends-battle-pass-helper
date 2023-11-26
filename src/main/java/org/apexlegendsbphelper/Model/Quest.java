@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.nio.charset.StandardCharsets;
 
-import static org.apexlegendsbphelper.Model.FileUtil.addQuestToDictionary;
-import static org.apexlegendsbphelper.Model.FileUtil.searchInDictionary;
+import static org.apexlegendsbphelper.Model.DictionaryUtil.addQuestToDictionary;
+import static org.apexlegendsbphelper.Model.DictionaryUtil.searchDictionary;
 import static org.apexlegendsbphelper.Model.StringUtil.replaceNumberWithDollar;
 
 public class Quest {
@@ -16,10 +16,14 @@ public class Quest {
     Quest(String questNameBR, String questNameNBR, String isCompleted, String questReward) throws IOException {
         if (questNameBR != null && questNameNBR != null) {
             if(!questNameBR.isEmpty()) {
-                this.questNameBR = processQuestName(questNameBR);
+                questNameBR = questNameBR.trim();
+                questNameBR = questNameBR.replace(".", ",");
+                this.questNameBR = questNameBR;
             }
             if(!questNameNBR.isEmpty()) {
-                this.questNameNBR = processQuestName(questNameNBR);
+                questNameNBR = questNameNBR.trim();
+                questNameNBR = questNameNBR.replace(".", ",");
+                this.questNameNBR = questNameNBR;
             }
         }
 
@@ -32,39 +36,6 @@ public class Quest {
         if(questReward != null && !questReward.isEmpty()) {
             this.questReward = (byte) Integer.parseInt(questReward.trim());
         }
-    }
-
-    private String processQuestName(String questName) throws IOException {
-        questName = questName.trim();
-        questName = questName.replace(".", ",");
-
-        String dictionaryQuestName = replaceNumberWithDollar(questName);
-        if(dictionaryQuestName == null) {
-            return questName;
-        } else {
-            addQuestToDictionary(dictionaryQuestName);
-
-        }
-
-
-        String[] questNameSplitted = questName.split(" ");
-//        System.out.println("Ищем строку: " + questName);
-//        String dictionaryOccur = searchInDictionary(dictionaryQuestName);
-//        if(dictionaryOccur != null) {
-//            questName = dictionaryOccur.replace("$", questNameSplitted[Integer.parseInt(returnArray[1])]);
-//            questNameSplitted = questName.split(" ");
-//        }
-
-        if(returnArray[0].equals("true")) {
-
-            questName = "";
-            for(String word : questNameSplitted) {
-                questName += word + " ";
-            }
-            questName = questName.trim();
-        }
-
-        return questName;
     }
 
 

@@ -11,31 +11,32 @@ public abstract class StringUtil {
             return probability;
         }
 
-        // Разбиваем строки на слова
         String[] string1Splitted = string1.split(" ");
         String[] string2Splitted = string2.split(" ");
 
-        // Создаем множества для уникальных слов в каждой строке
         Set<String> set1 = new HashSet<>(Arrays.asList(string1Splitted));
         Set<String> set2 = new HashSet<>(Arrays.asList(string2Splitted));
 
-        // Находим пересечение множеств
         Set<String> intersection = new HashSet<>(set1);
         intersection.retainAll(set2);
 
-        // Вычисляем вероятность на основе количества общих слов
         probability = (double) intersection.size() / Math.min(set1.size(), set2.size()) * 100;
-
         return probability;
     }
 
     public static int getNumberPosition(String inputString) {
         int numberPosition = -1;
-        inputString = inputString.trim();
-        String[] inputStringSplitted = inputString.split(" ");
 
-        for(int i = 0; i < inputStringSplitted.length; i++) {
-            String tempWord = inputStringSplitted[i];
+        if(inputString == null) {
+            return numberPosition;
+        }
+
+        String tempString = inputString;
+        tempString = tempString.trim();
+        String[] tempStringSplitted = tempString.split(" ");
+
+        for(int i = 0; i < tempStringSplitted.length; i++) {
+            String tempWord = tempStringSplitted[i];
             tempWord = tempWord.replace(",", "");
             tempWord = tempWord.replace(".", "");
             tempWord = tempWord.replace("o", "0");
@@ -52,8 +53,8 @@ public abstract class StringUtil {
         return numberPosition;
     }
 
-    public static boolean ifHasNumber(String unputString) {
-        if(getNumberPosition(unputString) == -1) {
+    public static boolean checkForNumber(String inputString) {
+        if(getNumberPosition(inputString) == -1 || inputString == null) {
             return false;
         } else {
             return true;
@@ -78,5 +79,78 @@ public abstract class StringUtil {
         } else {
             return null;
         }
+    }
+
+    public static String pathFixerLinux (String inputPath) {
+        String outputPath = inputPath;
+        if(!outputPath.contains("file:")) {
+            outputPath = "file:" + outputPath;
+        }
+        outputPath.replace("\\", "/");
+        return outputPath;
+    }
+
+    public static String pathFixerWindows (String inputPath) {
+        String outputPath = inputPath;
+        if(outputPath.contains("file:")) {
+            outputPath = outputPath.substring(5);
+        }
+        outputPath.replace("/", "\\");
+        return outputPath;
+    }
+
+    public static String replaceOWithZero (String inputString) {
+        //if a symbol "O" has a number before it, replace it with "0"
+
+        if(inputString == null) {
+            return null;
+        }
+
+        String outputString = inputString;
+        outputString = outputString.trim();
+        String[] outputStringSplitted = outputString.split(" ");
+
+        String charO = String.valueOf((char) 79);
+        for(int i = 0; i < outputStringSplitted.length; i++) {
+            if(i > 0 && outputStringSplitted[i].contains(charO) && checkForNumber(outputStringSplitted[i - 1])) {
+                String tempWord = outputStringSplitted[i];
+                tempWord = tempWord.replace(charO, "0");
+                outputStringSplitted[i] = tempWord;
+            }
+        }
+
+        outputString = "";
+        for(String word : outputStringSplitted) {
+            outputString += word + " ";
+        }
+        outputString = outputString.trim();
+
+        return outputString;
+    }
+
+    public static String removeCommaFromNumber (String inputString) {
+        if(inputString == null) {
+            return null;
+        }
+
+        String outputString = inputString;
+        outputString = outputString.trim();
+        System.out.println("replace");
+        System.out.println(outputString);
+
+        if(checkForNumber(outputString)) {
+            int numberPosition = getNumberPosition(outputString);
+            String[] outputStringSplitted = outputString.split(" ");
+            outputStringSplitted[numberPosition] = outputStringSplitted[numberPosition].replace(",", "");
+            outputString = "";
+            for(String word : outputStringSplitted) {
+                outputString += word + " ";
+            }
+            outputString = outputString.trim();
+        }
+
+        System.out.println(outputString);
+
+        return outputString;
     }
 }

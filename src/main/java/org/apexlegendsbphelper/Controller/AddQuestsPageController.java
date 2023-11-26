@@ -4,24 +4,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import net.sourceforge.tess4j.TesseractException;
-import org.apexlegendsbphelper.Model.MainUI;
 import org.apexlegendsbphelper.Model.Quest;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.apexlegendsbphelper.Model.FXUtil.openFileChooser;
-import static org.apexlegendsbphelper.Model.FXUtil.pathFixerWindows;
-import static org.apexlegendsbphelper.Model.ImageUtil.processImage;
-import static org.apexlegendsbphelper.Model.ImageUtil.removeQuestsDuplicates;
-import static org.apexlegendsbphelper.Model.MainUI.scanImages;
+import static org.apexlegendsbphelper.Model.MainUI.processWeekImages;
 
 public class AddQuestsPageController {
     @FXML
@@ -34,10 +29,6 @@ public class AddQuestsPageController {
     private ImageView imageViewAddImage1;
     @FXML
     private ImageView imageViewAddImage2;
-    @FXML
-    private Button btnResetImages;
-    @FXML
-    private Button btnScanImages;
     @FXML
     private VBox questsVBox;
     private String imagePath1 = "";
@@ -67,14 +58,12 @@ public class AddQuestsPageController {
                     btnAddImage1.setVisible(false);
                     imageViewAddImage1.setImage(weekImage);
                     imageViewAddImage1.setVisible(true);
-                    System.out.println(pathFixerWindows(imagePath1));
                 }
                 case "btnAddImage2" -> {
                     imagePath2 = pathToWeekImage;
                     btnAddImage2.setVisible(false);
                     imageViewAddImage2.setImage(weekImage);
                     imageViewAddImage2.setVisible(true);
-                    System.out.println(pathFixerWindows(imagePath2));
                 }
             }
         }
@@ -90,8 +79,7 @@ public class AddQuestsPageController {
 
     @FXML
     protected void btnClickScanImages() throws TesseractException, IOException {
-        Quest[] quests = scanImages(imagePath1, imagePath2);
-        //<Button maxHeight="24.0" maxWidth="160.0" minHeight="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #0E0E0E;" text="Week 1" textFill="#e8e8e8" />
+        Quest[] quests = processWeekImages(imagePath1, imagePath2);
         if(quests != null) {
             for(Quest quest : quests) {
                 Button questButton = new Button();
