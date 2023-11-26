@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.apexlegendsbphelper.Model.FileUtil.addQuestToDictionary;
 import static org.apexlegendsbphelper.Model.FileUtil.searchInDictionary;
+import static org.apexlegendsbphelper.Model.StringUtil.replaceNumberWithDollar;
 
 public class Quest {
     private String questNameBR;
@@ -37,8 +38,14 @@ public class Quest {
         questName = questName.trim();
         questName = questName.replace(".", ",");
 
-        String[] returnArray = replaceNumberWithDollar(questName);
-        String dictionaryQuestName = returnArray[2];
+        String dictionaryQuestName = replaceNumberWithDollar(questName);
+        if(dictionaryQuestName == null) {
+            return questName;
+        } else {
+            addQuestToDictionary(dictionaryQuestName);
+
+        }
+
 
         String[] questNameSplitted = questName.split(" ");
 //        System.out.println("Ищем строку: " + questName);
@@ -49,7 +56,6 @@ public class Quest {
 //        }
 
         if(returnArray[0].equals("true")) {
-            addQuestToDictionary(dictionaryQuestName);
 
             questName = "";
             for(String word : questNameSplitted) {
@@ -61,45 +67,7 @@ public class Quest {
         return questName;
     }
 
-    private String[] replaceNumberWithDollar(String inputString) {
-        inputString = inputString.trim();
-        String ouputString = inputString;
-        String[] outputArray = new String[3];
 
-        String[] ouputStringSplitted = ouputString.split(" ");
-
-        int numberIndex = -1;
-        for(int i = 0; i < ouputStringSplitted.length; i++) {
-            String tempWord = ouputStringSplitted[i];
-            tempWord = tempWord.replace(",", "");
-            tempWord = tempWord.replace(".", "");
-            tempWord = tempWord.replace("o", "0");
-            tempWord = tempWord.replace("O", "0");
-            try {
-                Integer.parseInt(tempWord);
-            } catch (NumberFormatException e) {
-                continue;
-            }
-            numberIndex = i;
-            break;
-        }
-
-        if(numberIndex != -1) {
-            outputArray[0] = "true";
-            outputArray[1] = numberIndex + "";
-            ouputStringSplitted[numberIndex] = "$";
-            ouputString = "";
-            for(String word : ouputStringSplitted) {
-                ouputString += word + " ";
-            }
-            ouputString = ouputString.trim();
-        } else {
-            outputArray[0] = "false";
-            outputArray[1] = "";
-        }
-        outputArray[2] = ouputString;
-        return outputArray;
-    }
 
     public String getQuestNameBR() {
         return questNameBR;

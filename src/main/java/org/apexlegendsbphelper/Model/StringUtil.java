@@ -29,18 +29,54 @@ public abstract class StringUtil {
         return probability;
     }
 
-    public static boolean isStringContainsNumber(String string) {
-        if(string == null) {
-            return false;
-        }
+    public static int getNumberPosition(String inputString) {
+        int numberPosition = -1;
+        inputString = inputString.trim();
+        String[] inputStringSplitted = inputString.split(" ");
 
-
-        for(int i = 0; i < string.length(); i++) {
-            if(Character.isDigit(string.charAt(i))) {
-                return true;
+        for(int i = 0; i < inputStringSplitted.length; i++) {
+            String tempWord = inputStringSplitted[i];
+            tempWord = tempWord.replace(",", "");
+            tempWord = tempWord.replace(".", "");
+            tempWord = tempWord.replace("o", "0");
+            tempWord = tempWord.replace("O", "0");
+            try {
+                Integer.parseInt(tempWord);
+            } catch (NumberFormatException e) {
+                continue;
             }
+            numberPosition = i;
+            break;
         }
 
-        return false;
+        return numberPosition;
+    }
+
+    public static boolean ifHasNumber(String unputString) {
+        if(getNumberPosition(unputString) == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static String replaceNumberWithDollar(String inputString) {
+        String outputString = inputString;
+        outputString = outputString.trim();
+
+        int numberPosition = getNumberPosition(outputString);
+        if(numberPosition != -1) {
+            String[] outputStringSplitted = outputString.split(" ");
+            outputStringSplitted[numberPosition] = "$";
+
+            outputString = "";
+            for(String word : outputStringSplitted) {
+                outputString += word + " ";
+            }
+            outputString = outputString.trim();
+            return outputString;
+        } else {
+            return null;
+        }
     }
 }
