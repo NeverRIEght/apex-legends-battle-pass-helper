@@ -15,7 +15,8 @@ public class Main {
     public static int questsTresholdLow = 120;
 
     public static void main(String[] args) throws TesseractException, IOException {
-        Quest[] quests1 = processWeekImages("D:\\apex-tests\\testdata1.png", "D:\\apex-tests\\testdata2.png");
+//        Quest[] quests1 = processWeekImages("D:\\apex-tests\\testdata1.png", "D:\\apex-tests\\testdata2.png");
+        Quest[] quests1 = processWeekImages("/Users/michaelkomarov/Downloads/image_2023-11-22_10-50-14.png", "/Users/michaelkomarov/Downloads/image_2023-11-22_10-50-14.png");
 
         for (Quest quest : quests1) {
             System.out.println(quest.getQuestNameBR());
