@@ -1,5 +1,6 @@
 package org.apexlegendsbphelper.Model;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,28 @@ public abstract class StringUtil {
         }
         outputPath = outputPath.replace("/", "\\");
         return outputPath;
+    }
+
+    public static String pathFixer (String inputPath) {
+        File outputFile;
+        String pathToFile;
+        try {
+            outputFile = new File(inputPath);
+            pathToFile = outputFile.getPath();
+        } catch (Exception e) {
+            try {
+                outputFile = new File(pathFixerWindows(inputPath));
+                pathToFile = outputFile.getPath();
+            } catch (Exception e1) {
+                try {
+                    outputFile = new File(pathFixerLinux(inputPath));
+                    pathToFile = outputFile.getPath();
+                } catch (Exception e2) {
+                    return null;
+                }
+            }
+        }
+        return pathToFile;
     }
 
     public static double stringsEqualsProbability(String string1, String string2) {

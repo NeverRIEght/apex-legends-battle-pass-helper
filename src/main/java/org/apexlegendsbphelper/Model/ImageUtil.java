@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.Objects;
 import javax.imageio.*;
 
+import static org.apexlegendsbphelper.Model.FileUtil.loadNewFile;
 import static org.apexlegendsbphelper.Model.FileUtil.recreateTempDirectories;
 import static org.apexlegendsbphelper.Model.Main.*;
 
@@ -94,7 +95,7 @@ public abstract class ImageUtil {
         tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
         tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
 
-        return tesseract.doOCR(new File(pathToImage));
+        return tesseract.doOCR(loadNewFile(pathToImage));
     }
 
     public static int[] searchFirstColoredPixel(BufferedImage image, int colorCode, int startX, int startY) {
@@ -233,7 +234,7 @@ public abstract class ImageUtil {
 
         recreateTempDirectories(tempFolderPath);
 
-        BufferedImage inputImage = ImageIO.read(new File(pathToImage));
+        BufferedImage inputImage = ImageIO.read(loadNewFile(pathToImage));
         BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
         imageToBlackWhite(grayscaleImage, blackWhiteImagePath, imageTreshold);
 

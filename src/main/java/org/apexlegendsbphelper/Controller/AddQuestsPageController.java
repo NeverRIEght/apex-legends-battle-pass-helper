@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import static org.apexlegendsbphelper.Model.FXUtil.openFileChooser;
 import static org.apexlegendsbphelper.Model.MainUI.processWeekImages;
+import static org.apexlegendsbphelper.Model.StringUtil.pathFixer;
 
 public class AddQuestsPageController {
     @FXML
@@ -48,10 +49,9 @@ public class AddQuestsPageController {
         Button clickedButton = (Button) event.getSource();
         String buttonId = clickedButton.getId();
 
-        String pathToWeekImage = openFileChooser();
+        String pathToWeekImage = pathFixer(openFileChooser());
         if(pathToWeekImage != null) {
             Image weekImage = new Image(pathToWeekImage);
-
             switch (buttonId) {
                 case "btnAddImage1" -> {
                     imagePath1 = pathToWeekImage;

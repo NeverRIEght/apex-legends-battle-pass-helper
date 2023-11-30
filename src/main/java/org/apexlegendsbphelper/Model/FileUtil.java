@@ -3,6 +3,7 @@ package org.apexlegendsbphelper.Model;
 import java.io.*;
 
 import static org.apexlegendsbphelper.Model.DictionaryUtil.createDictionaryFile;
+import static org.apexlegendsbphelper.Model.StringUtil.*;
 
 public class FileUtil {
     public static boolean deleteDirectory(File directory) {
@@ -43,5 +44,9 @@ public class FileUtil {
         new File(tempFolderPath + File.separator + "tmpQuestsRegProgress").mkdirs();
 
         createDictionaryFile();
+    }
+
+    public static File loadNewFile(String pathToFile) {
+        return new File(pathFixer(pathToFile));
     }
 }

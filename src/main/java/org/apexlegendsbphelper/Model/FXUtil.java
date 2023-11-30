@@ -4,8 +4,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-import static org.apexlegendsbphelper.Model.StringUtil.pathFixerLinux;
-
 public abstract class FXUtil {
     public String pathToWeekImages = "";
     public static String openFileChooser() {
@@ -18,7 +16,7 @@ public abstract class FXUtil {
 
 
         if (selectedFile != null) {
-            return pathFixerLinux(selectedFile.getPath());
+            return selectedFile.getPath();
         } else {
             return null;
         }
