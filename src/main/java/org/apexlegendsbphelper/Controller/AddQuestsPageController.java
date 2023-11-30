@@ -51,7 +51,7 @@ public class AddQuestsPageController {
 
         String pathToWeekImage = pathFixer(openFileChooser());
         if(pathToWeekImage != null) {
-            Image weekImage = new Image(pathToWeekImage);
+            Image weekImage = new Image(new File(pathToWeekImage).toURI().toString());
             switch (buttonId) {
                 case "btnAddImage1" -> {
                     imagePath1 = pathToWeekImage;
