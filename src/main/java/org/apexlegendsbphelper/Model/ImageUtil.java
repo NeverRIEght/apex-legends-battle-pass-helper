@@ -16,14 +16,25 @@ import static org.apexlegendsbphelper.Model.FileUtil.recreateTempDirectories;
 import static org.apexlegendsbphelper.Model.Main.*;
 
 public abstract class ImageUtil {
-    private static final String tesseractDatapath = System.getProperty("user.dir") + File.separator + "lib"
-            + File.separator + "tesseract" + File.separator + "share"
-            + File.separator + "tessdata";
+    private static final String tesseractDatapath;
     private static final String tesseractSetLanguage = "eng+eng_old";
     private static final String tesseractSetDigits = "digits";
     static int tesseractSetPageSegMode = 1;
     static int tesseractSetOcrEngineMode = 1;
 
+    static {
+        StringBuilder datapathBuilder = new StringBuilder();
+        datapathBuilder.append(System.getProperty("user.dir"));
+        datapathBuilder.append(File.separator);
+        datapathBuilder.append("lib");
+        datapathBuilder.append(File.separator);
+        datapathBuilder.append("tesseract");
+        datapathBuilder.append(File.separator);
+        datapathBuilder.append("share");
+        datapathBuilder.append(File.separator);
+        datapathBuilder.append("tessdata");
+        tesseractDatapath = datapathBuilder.toString();
+    }
 
     public static BufferedImage imageToGrayscale(BufferedImage image, String pathToGrayscale) throws IOException {
         BufferedImage result;
