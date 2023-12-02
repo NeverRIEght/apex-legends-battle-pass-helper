@@ -3,6 +3,7 @@ package org.apexlegendsbphelper.Model;
 import java.io.*;
 
 import static org.apexlegendsbphelper.Model.DictionaryUtil.createDictionaryFile;
+import static org.apexlegendsbphelper.App.*;
 import static org.apexlegendsbphelper.Model.StringUtil.*;
 
 public class FileUtil {
@@ -27,7 +28,11 @@ public class FileUtil {
         return false;
     }
 
-    public static void recreateTempDirectories(String tempFolderPath) throws IOException {
+    public static void recreateTempDirectories() throws IOException {
+
+        tempFolderPath = System.getProperty("user.dir") + File.separator + "tmp";
+        grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
+        blackWhiteImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
 
         if (new File(tempFolderPath).exists()) {
             deleteDirectory(new File(tempFolderPath));

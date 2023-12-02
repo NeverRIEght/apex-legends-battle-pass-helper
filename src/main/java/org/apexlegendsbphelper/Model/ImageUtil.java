@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.io.File;
 import javax.imageio.*;
 
+import static org.apexlegendsbphelper.App.*;
 import static org.apexlegendsbphelper.Model.FileUtil.loadNewFile;
-import static org.apexlegendsbphelper.Model.FileUtil.recreateTempDirectories;
-import static org.apexlegendsbphelper.Model.Main.*;
 
 public abstract class ImageUtil {
     private static final String tesseractDatapath = System.getProperty("user.dir")
@@ -250,13 +249,6 @@ public abstract class ImageUtil {
     }
 
     public static Quest[] processImage(String pathToImage) throws TesseractException, IOException {
-
-        tempFolderPath = System.getProperty("user.dir") + File.separator + "tmp";
-        grayscaleImagePath = tempFolderPath + File.separator + "input_grayscale.png";
-        blackWhiteImagePath = tempFolderPath + File.separator + "input_blackwhite.png";
-
-
-        recreateTempDirectories(tempFolderPath);
 
         BufferedImage inputImage = ImageIO.read(loadNewFile(pathToImage));
         BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
