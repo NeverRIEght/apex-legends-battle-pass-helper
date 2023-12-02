@@ -1,6 +1,7 @@
 package org.apexlegendsbphelper.Model;
 
 import java.io.*;
+import java.util.Objects;
 
 import static org.apexlegendsbphelper.Model.DictionaryUtil.createDictionaryFile;
 import static org.apexlegendsbphelper.App.*;
@@ -52,6 +53,11 @@ public class FileUtil {
     }
 
     public static File loadNewFile(String pathToFile) {
-        return new File(pathFixer(pathToFile));
+        if(pathToFile.isEmpty()) {
+            System.out.println("loadNewFile: File not found");
+            return null;
+        } else {
+            return new File(Objects.requireNonNull(pathFixer(pathToFile)));
+        }
     }
 }

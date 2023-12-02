@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import javax.imageio.*;
 
+import static java.util.Objects.requireNonNull;
 import static org.apexlegendsbphelper.App.*;
 import static org.apexlegendsbphelper.Model.FileUtil.loadNewFile;
 
@@ -85,6 +86,11 @@ public abstract class ImageUtil {
     }
 
     public static String recogniseText(String pathToImage, boolean isDigitsOnly) throws TesseractException {
+        if(loadNewFile(pathToImage) == null) {
+            System.out.println("recogniseText: File not found");
+            return null;
+        }
+
         Tesseract tesseract = new Tesseract();
         tesseract.setDatapath(tesseractDatapath);
 
@@ -98,7 +104,15 @@ public abstract class ImageUtil {
         tesseract.setOcrEngineMode(tesseractSetOcrEngineMode);
         tesseract.setPageSegMode(ITessAPI.TessPageSegMode.PSM_AUTO);
 
-        return tesseract.doOCR(loadNewFile(pathToImage));
+
+        String result = tesseract.doOCR(loadNewFile(pathToImage));
+
+        if(result == null) {
+            System.out.println("recogniseText: result is null");
+            return "";
+        } else {
+            return result.trim();
+        }
     }
 
     public static int[] searchFirstColoredPixel(BufferedImage image, int colorCode, int startX, int startY) {
@@ -250,7 +264,7 @@ public abstract class ImageUtil {
 
     public static Quest[] processImage(String pathToImage) throws TesseractException, IOException {
 
-        BufferedImage inputImage = ImageIO.read(loadNewFile(pathToImage));
+        BufferedImage inputImage = ImageIO.read(requireNonNull(loadNewFile(pathToImage)));
         BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
         imageToBlackWhite(grayscaleImage, blackWhiteImagePath, imageTreshold);
 
@@ -262,7 +276,7 @@ public abstract class ImageUtil {
         }
 
         File questsDirectory = new File(tempFolderPath + File.separator + "tmpQuests");
-        File[] questsImagesFiles = questsDirectory.listFiles();
+        File[] questsImagesFiles = requireNonNull(questsDirectory.listFiles());
 
         if(questsImagesFiles.length != questsImages.length) {
             System.out.println("Quests images loaded with an error");
@@ -374,7 +388,7 @@ public abstract class ImageUtil {
 
                     imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                     String questBRProgress = recogniseText(outputPathBuilder.toString(), false);
-                    if (questBRProgress.trim().isEmpty()) {
+                    if (questBRProgress.isEmpty()) {
                         currentTreshold = questsTresholdLow;
                         imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                         questBRProgress = recogniseText(outputPathBuilder.toString(), false);
@@ -508,7 +522,7 @@ public abstract class ImageUtil {
 
                     imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                     String questBRProgress = recogniseText(outputPathBuilder.toString(), false);
-                    if (questBRProgress.trim().isEmpty()) {
+                    if (questBRProgress.isEmpty()) {
                         currentTreshold = questsTresholdLow;
                         imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                         questBRProgress = recogniseText(outputPathBuilder.toString(), false);
@@ -606,7 +620,7 @@ public abstract class ImageUtil {
 
                     imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                     String questProgress = recogniseText(outputPathBuilder.toString(), false);
-                    if (questProgress.trim().isEmpty()) {
+                    if (questProgress.isEmpty()) {
                         currentTreshold = questsTresholdLow;
                         imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
                         questProgress = recogniseText(outputPathBuilder.toString(), false);
@@ -649,6 +663,13 @@ public abstract class ImageUtil {
                     questsOnImage[questIndex] = quest;
                 }
                 default -> System.out.println("Recognition aborted, invalid quest type");
+            }
+        }
+
+        for(Quest quest : questsOnImage) {
+            if(quest == null) {
+                System.out.println("ProcessImage: some quests are null");
+                return new Quest[0];
             }
         }
         return questsOnImage;

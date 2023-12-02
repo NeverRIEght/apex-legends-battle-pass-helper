@@ -10,13 +10,13 @@ import static org.apexlegendsbphelper.Model.StringUtil.*;
 
 public abstract class MainUI {
     public static Quest[] processWeekImages(String imagePath1, String imagePath2) throws TesseractException, IOException {
-        imagePath1 = pathFixer(imagePath1);
-        imagePath2 = pathFixer(imagePath2);
-
-
 
         if(!imagePath1.isEmpty() && !imagePath2.isEmpty()) {
             sortDictionary();
+
+            imagePath1 = pathFixer(imagePath1);
+            imagePath2 = pathFixer(imagePath2);
+
             Quest[] quests1 = processImage(imagePath1);
             Quest[] quests2 = processImage(imagePath2);
 

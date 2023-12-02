@@ -23,7 +23,7 @@ public class Quest {
 
         if (isCompleted != null && isCompleted.trim().equals("Completed")) {
             this.isCompleted = true;
-        } else if (isCompleted != null && !isCompleted.trim().equals("Completed")) {
+        } else if (isCompleted != null) {
             this.isCompleted = false;
         }
 

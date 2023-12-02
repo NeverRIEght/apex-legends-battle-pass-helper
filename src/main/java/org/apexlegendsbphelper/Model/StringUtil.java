@@ -39,7 +39,8 @@ public abstract class StringUtil {
                     outputFile = new File(pathFixerLinux(inputPath));
                     pathToFile = outputFile.getPath();
                 } catch (Exception e2) {
-                    return null;
+                    System.out.println("pathFixer: File not found");
+                    return "";
                 }
             }
         }
@@ -103,20 +104,20 @@ public abstract class StringUtil {
             return null;
         }
 
-        String outputString = inputString;
-        outputString = outputString.trim();
+        StringBuilder outputString = new StringBuilder(inputString);
+        outputString = new StringBuilder(outputString.toString().trim());
 
-        int numberPosition = getNumberPosition(outputString);
+        int numberPosition = getNumberPosition(outputString.toString());
         if(numberPosition != -1) {
-            String[] outputStringSplitted = outputString.split(" ");
+            String[] outputStringSplitted = outputString.toString().split(" ");
             outputStringSplitted[numberPosition] = "$";
 
-            outputString = "";
+            outputString = new StringBuilder();
             for(String word : outputStringSplitted) {
-                outputString += word + " ";
+                outputString.append(word).append(" ");
             }
-            outputString = outputString.trim();
-            return outputString;
+            outputString = new StringBuilder(outputString.toString().trim());
+            return outputString.toString();
         } else {
             return null;
         }
@@ -129,9 +130,9 @@ public abstract class StringUtil {
             return null;
         }
 
-        String outputString = inputString;
-        outputString = outputString.trim();
-        String[] outputStringSplitted = outputString.split(" ");
+        StringBuilder outputString = new StringBuilder(inputString);
+        outputString = new StringBuilder(outputString.toString().trim());
+        String[] outputStringSplitted = outputString.toString().split(" ");
 
         String charO = String.valueOf((char) 79);
         for(int i = 0; i < outputStringSplitted.length; i++) {
@@ -142,13 +143,13 @@ public abstract class StringUtil {
             }
         }
 
-        outputString = "";
+        outputString = new StringBuilder();
         for(String word : outputStringSplitted) {
-            outputString += word + " ";
+            outputString.append(word).append(" ");
         }
-        outputString = outputString.trim();
+        outputString = new StringBuilder(outputString.toString().trim());
 
-        return outputString;
+        return outputString.toString();
     }
 
     public static String removeCommaFromNumber (String inputString) {
@@ -156,20 +157,20 @@ public abstract class StringUtil {
             return null;
         }
 
-        String outputString = inputString;
-        outputString = outputString.trim();
+        StringBuilder outputString = new StringBuilder(inputString);
+        outputString = new StringBuilder(outputString.toString().trim());
 
-        if(checkForNumber(outputString)) {
-            int numberPosition = getNumberPosition(outputString);
-            String[] outputStringSplitted = outputString.split(" ");
+        if(checkForNumber(outputString.toString())) {
+            int numberPosition = getNumberPosition(outputString.toString());
+            String[] outputStringSplitted = outputString.toString().split(" ");
             outputStringSplitted[numberPosition] = outputStringSplitted[numberPosition].replace(",", "");
-            outputString = "";
+            outputString = new StringBuilder();
             for(String word : outputStringSplitted) {
-                outputString += word + " ";
+                outputString.append(word).append(" ");
             }
-            outputString = outputString.trim();
+            outputString = new StringBuilder(outputString.toString().trim());
         }
 
-        return outputString;
+        return outputString.toString();
     }
 }

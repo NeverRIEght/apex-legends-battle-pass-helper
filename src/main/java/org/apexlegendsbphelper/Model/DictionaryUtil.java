@@ -31,15 +31,15 @@ public abstract class DictionaryUtil {
                 }
             }
 
-            String finalQuestName = "";
+            StringBuilder finalQuestName = new StringBuilder();
             for (String word : words) {
-                finalQuestName += word + " ";
+                finalQuestName.append(word).append(" ");
             }
 
-            finalQuestName = finalQuestName.trim();
+            finalQuestName = new StringBuilder(finalQuestName.toString().trim());
 
             bufferedWriter.newLine();
-            bufferedWriter.write(finalQuestName);
+            bufferedWriter.write(finalQuestName.toString());
 
             System.out.println("Added quest to dictionary");
         } catch (IOException e) {
