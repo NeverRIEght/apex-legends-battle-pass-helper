@@ -283,58 +283,148 @@ public abstract class ImageUtil {
 
                         // Cut: Name BR
 
-                        BufferedImage questBRPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastBRPixelCoords[0], 0, firstNBRPixelCoords[0], lastBRPixelCoords[1]);
-                        questBRPart = cropImageByPixels(questBRPart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", 0, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+                        StringBuilder outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questBRPart = cropImageByPixels(questImage, outputPathBuilder.toString(), lastBRPixelCoords[0], 0, firstNBRPixelCoords[0], lastBRPixelCoords[1]);
+                        questBRPart = cropImageByPixels(questBRPart, outputPathBuilder.toString(), 0, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
 
                         // Cut: Name NBR
 
-                        BufferedImage questNBRPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastNBRPixelCoords[0], 0, questImage.getWidth(), lastNBRPixelCoords[1]);
-                        questNBRPart = cropImageByPixels(questNBRPart, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", 0, 0, questNBRPart.getWidth() - questNBRPart.getWidth() / 5, questNBRPart.getHeight());
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsNBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questNBRPart = cropImageByPixels(questImage, outputPathBuilder.toString(), lastNBRPixelCoords[0], 0, questImage.getWidth(), lastNBRPixelCoords[1]);
+                        questNBRPart = cropImageByPixels(questNBRPart, outputPathBuilder.toString(), 0, 0, questNBRPart.getWidth() - questNBRPart.getWidth() / 5, questNBRPart.getHeight());
 
                         // Cut: Status BR
 
-                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", 0, (questImage.getHeight() - questImage.getHeight() / 10 * 6), firstNBRPixelCoords[0], questImage.getHeight());
-                        questBRProgressPart = cropImageByPixels(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questBRPart.getHeight() / 5 * 4, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, outputPathBuilder.toString(), 0, (questImage.getHeight() - questImage.getHeight() / 10 * 6), firstNBRPixelCoords[0], questImage.getHeight());
+                        questBRProgressPart = cropImageByPixels(questBRProgressPart, outputPathBuilder.toString(), questBRPart.getHeight() / 5 * 4, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
 
                         // Cut: Status NBR
 
-                        BufferedImage questNBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() / 100 * 53, (questImage.getHeight() - questImage.getHeight() / 10 * 6), questImage.getWidth(), questImage.getHeight());
-                        questNBRProgressPart = cropImageByPixels(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questNBRProgressPart.getWidth() / 100, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsNBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questNBRProgressPart = cropImageByPixels(questImage, outputPathBuilder.toString(), questImage.getWidth() / 100 * 53, (questImage.getHeight() - questImage.getHeight() / 10 * 6), questImage.getWidth(), questImage.getHeight());
+                        questNBRProgressPart = cropImageByPixels(questNBRProgressPart, outputPathBuilder.toString(), questNBRProgressPart.getWidth() / 100, 0, questBRPart.getWidth() - questBRPart.getWidth() / 5, questBRPart.getHeight());
 
                         // Cut: Reward
 
-                        BufferedImage questRewardPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsReward");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questRewardPart = cropImageByPixels(questImage, outputPathBuilder.toString(), questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
 
                         // Determine Treshold
                         // Recognise: BR Progress
 
-                        imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
-                        String questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append("BW.png");
+
+                        imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
+                        String questBRProgress = recogniseText(outputPathBuilder.toString(), false);
                         if (questBRProgress.trim().isEmpty()) {
                             currentTreshold = questsTresholdLow;
-                            imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
-                            questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                            imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
+                            questBRProgress = recogniseText(outputPathBuilder.toString(), false);
                         }
 
                         // Recognise: NBR Progress
 
-                        imageToBlackWhite(questNBRProgressPart, tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
-                        String questNBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsNBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsNBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append("BW.png");
+
+                        imageToBlackWhite(questNBRProgressPart, outputPathBuilder.toString(), currentTreshold);
+                        String questNBRProgress = recogniseText(outputPathBuilder.toString(), false);
 
                         // Recognise: BR Name
 
-                        imageToBlackWhite(questBRPart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
-                        String questNameBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        imageToBlackWhite(questBRPart, outputPathBuilder.toString(), currentTreshold);
+                        String questNameBR = recogniseText(outputPathBuilder.toString(), false);
 
                         // Recognise: NBR Name
 
-                        imageToBlackWhite(questNBRPart, tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
-                        String questNameNBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsNBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsNBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        imageToBlackWhite(questNBRPart, outputPathBuilder.toString(), currentTreshold);
+                        String questNameNBR = recogniseText(outputPathBuilder.toString(), false);
 
                         // Recognise: Reward
 
-                        imageToBlackWhite(questRewardPart, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", currentTreshold);
-                        String questReward = recogniseText(tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsReward");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        imageToBlackWhite(questRewardPart, outputPathBuilder.toString(), currentTreshold);
+                        String questReward = recogniseText(outputPathBuilder.toString(), false);
 
                         // Output
 
@@ -356,37 +446,91 @@ public abstract class ImageUtil {
 
                         // Cut: Name BR
 
-                        BufferedImage questNamePart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", lastBRPixelCoords[0], firstBRPixelCoords[1], questImage.getWidth() - questImage.getWidth() / 100 * 12, lastBRPixelCoords[1]);
+                        StringBuilder outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questNamePart = cropImageByPixels(questImage, outputPathBuilder.toString(), lastBRPixelCoords[0], firstBRPixelCoords[1], questImage.getWidth() - questImage.getWidth() / 100 * 12, lastBRPixelCoords[1]);
 
                         // Cut: Status BR
 
-                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", 0, (questImage.getHeight() - questImage.getHeight() / 10 * 5) / 5 * 4, questImage.getWidth(), questImage.getHeight() / 10 * 8);
-                        questBRProgressPart = cropImageByPixels(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + ".png", questBRProgressPart.getWidth() / 100 * 2, 0, questBRProgressPart.getWidth() - questBRProgressPart.getWidth() / 5, questBRProgressPart.getHeight());
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questBRProgressPart = cropImageByPixels(questImage, outputPathBuilder.toString(), 0, (questImage.getHeight() - questImage.getHeight() / 10 * 5) / 5 * 4, questImage.getWidth(), questImage.getHeight() / 10 * 8);
+                        questBRProgressPart = cropImageByPixels(questBRProgressPart, outputPathBuilder.toString(), questBRProgressPart.getWidth() / 100 * 2, 0, questBRProgressPart.getWidth() - questBRProgressPart.getWidth() / 5, questBRProgressPart.getHeight());
 
                         // Cut: Reward
 
-                        BufferedImage questRewardPart = cropImageByPixels(questImage, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsReward");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        BufferedImage questRewardPart = cropImageByPixels(questImage, outputPathBuilder.toString(), questImage.getWidth() - questImage.getWidth() / 100 * 12, questImage.getHeight() / 10, questImage.getWidth() - questImage.getWidth() / 100 * 7, questImage.getHeight() - questImage.getHeight() / 10);
 
                         // Determine Treshold
                         // Recognise: BR Progress
 
-                        imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
-                        String questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBRProgress");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append("BW.png");
+
+                        imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
+                        String questBRProgress = recogniseText(outputPathBuilder.toString(), false);
                         if (questBRProgress.trim().isEmpty()) {
                             currentTreshold = questsTresholdLow;
-                            imageToBlackWhite(questBRProgressPart, tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", currentTreshold);
-                            questBRProgress = recogniseText(tempFolderPath + File.separator + "tmpQuestsBRProgress" + File.separator + "quest" + (questIndex + 1) + "BW.png", false);
+                            imageToBlackWhite(questBRProgressPart, outputPathBuilder.toString(), currentTreshold);
+                            questBRProgress = recogniseText(outputPathBuilder.toString(), false);
                         }
 
                         // Recognise: BR Name
 
-                        imageToBlackWhite(questNamePart, tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", questsTresholdHigh);
-                        String questNameBR = recogniseText(tempFolderPath + File.separator + "tmpQuestsBR" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsBR");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        imageToBlackWhite(questNamePart, outputPathBuilder.toString(), questsTresholdHigh);
+                        String questNameBR = recogniseText(outputPathBuilder.toString(), false);
 
                         // Recognise: Reward
 
-                        imageToBlackWhite(questRewardPart, tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", questsTresholdHigh);
-                        String questReward = recogniseText(tempFolderPath + File.separator + "tmpQuestsReward" + File.separator + "quest" + (questIndex + 1) + ".png", false);
+                        outputPathBuilder = new StringBuilder();
+                        outputPathBuilder.append(tempFolderPath);
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("tmpQuestsReward");
+                        outputPathBuilder.append(File.separator);
+                        outputPathBuilder.append("quest");
+                        outputPathBuilder.append(questIndex + 1);
+                        outputPathBuilder.append(".png");
+
+                        imageToBlackWhite(questRewardPart, outputPathBuilder.toString(), questsTresholdHigh);
+                        String questReward = recogniseText(outputPathBuilder.toString(), false);
 
 
 //                        System.out.println("QNameBR: " + questNameBR.trim());
