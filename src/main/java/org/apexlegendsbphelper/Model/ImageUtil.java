@@ -74,17 +74,17 @@ public abstract class ImageUtil {
         return outputImage;
     }
 
-    public static BufferedImage cropImageByPixels(BufferedImage image, String outputImagePath, int startX, int startY, int endX, int endY) throws IOException {
+    public static BufferedImage cropImageByPixels(BufferedImage inputImage, String outputImagePath, int startX, int startY, int endX, int endY) throws IOException {
         int width = endX - startX;
         int height = endY - startY;
 
-        BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
+        BufferedImage croppedImage = new BufferedImage(width, height, inputImage.getType());
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 int sourceX = x + startX;
                 int sourceY = y + startY;
-                int rgb = image.getRGB(sourceX, sourceY);
+                int rgb = inputImage.getRGB(sourceX, sourceY);
                 croppedImage.setRGB(x, y, rgb);
             }
         }
@@ -148,17 +148,17 @@ public abstract class ImageUtil {
         return coords2[1] - coords1[1];
     }
 
-    public static boolean cropQuestsOnImage(BufferedImage image) throws IOException {
+    public static boolean cropQuestsOnImage(BufferedImage inputImage) throws IOException {
 
-        int questHeight = determineQuestHeight(image);
+        int questHeight = determineQuestHeight(inputImage);
 
-        int[] firstBRPixel = searchFirstColoredPixel(image, -12544866, 0, 0);
+        int[] firstBRPixel = searchFirstColoredPixel(inputImage, -12544866, 0, 0);
 
-        image = cropImageByPixels(image, blackWhiteImagePath, firstBRPixel[0], 0, image.getWidth(), image.getHeight());
-        BufferedImage grayscaleImage = imageToGrayscale(image, grayscaleImagePath);
+        inputImage = cropImageByPixels(inputImage, blackWhiteImagePath, firstBRPixel[0], 0, inputImage.getWidth(), inputImage.getHeight());
+        BufferedImage grayscaleImage = imageToGrayscale(inputImage, grayscaleImagePath);
         BufferedImage blackWhiteImage = imageToBlackWhite(grayscaleImage, blackWhiteImagePath, 175);
 
-        int[] firstQuestCoords = new int[]{-1, -1, -1, -1};
+        int[] firstQuestCoords = {-1, -1, -1, -1};
 
         boolean foundFirstQuestH = false;
 
@@ -203,15 +203,25 @@ public abstract class ImageUtil {
         int startQuestsCounter = firstQuestCoords[3] / questHeight;
         int questsCounter = startQuestsCounter;
 
+
+//        StringBuilder outputPathBuilder = new StringBuilder();
+//        outputPathBuilder.append(tempFolderPath);
+//        outputPathBuilder.append(File.separator);
+//        outputPathBuilder.append("tmpQuests");
+//        outputPathBuilder.append(File.separator);
+//        outputPathBuilder.append("quest");
+//        outputPathBuilder.append(questsCounter);
+//        outputPathBuilder.append(".png");
+
         for (int i = firstQuestCoords[3]; i > questHeight; i -= questHeight) {
-            cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, image.getWidth(), i);
+            cropImageByPixels(inputImage, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, inputImage.getWidth(), i);
             questsCounter--;
         }
 
         questsCounter = startQuestsCounter;
 
-        for (int i = firstQuestCoords[3]; i <= image.getHeight(); i += questHeight) {
-            cropImageByPixels(image, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, image.getWidth(), i);
+        for (int i = firstQuestCoords[3]; i <= inputImage.getHeight(); i += questHeight) {
+            cropImageByPixels(inputImage, tempFolderPath + File.separator + "tmpQuests" + File.separator + "quest" + questsCounter + ".png", 0, i - questHeight, inputImage.getWidth(), i);
             questsCounter++;
         }
 
