@@ -12,6 +12,7 @@ import javax.imageio.*;
 
 import static java.util.Objects.requireNonNull;
 import static org.apexlegendsbphelper.App.*;
+import static org.apexlegendsbphelper.Model.FileUtil.copyToWeekImages;
 import static org.apexlegendsbphelper.Model.FileUtil.loadNewFile;
 
 public abstract class ImageUtil {
@@ -460,6 +461,7 @@ public abstract class ImageUtil {
 
                     Quest quest = new Quest(questNameBR, questNameNBR, questBRProgress, questReward);
                     questsOnImage[questIndex] = quest;
+                    copyToWeekImages(questsImagesFiles[questIndex].getAbsolutePath(), 1, questIndex + 1);
                 }
                 case 2 -> {
                     int[] firstBRPixelCoords = searchFirstColoredPixel(questImage, -12544866, 0, 0);
@@ -563,6 +565,7 @@ public abstract class ImageUtil {
 
                     Quest quest = new Quest(questNameBR, "", questBRProgress, questReward);
                     questsOnImage[questIndex] = quest;
+                    copyToWeekImages(questsImagesFiles[questIndex].getAbsolutePath(), 1, questIndex + 1);
                 }
                 case 3 -> {
 
@@ -661,6 +664,7 @@ public abstract class ImageUtil {
 
                     Quest quest = new Quest(questNameReg, "", questProgress, questReward);
                     questsOnImage[questIndex] = quest;
+                    copyToWeekImages(questsImagesFiles[questIndex].getAbsolutePath(), 1, questIndex + 1);
                 }
                 default -> System.out.println("Recognition aborted, invalid quest type");
             }

@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class App extends Application {
+    public static String dataFolderPath;
+    public static String weekImagesFolderPath;
     public static String tempFolderPath;
     public static String blackWhiteImagePath;
     public static String grayscaleImagePath;
