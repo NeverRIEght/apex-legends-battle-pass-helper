@@ -16,15 +16,11 @@ public abstract class FXUtil {
 
 
         if (selectedFile != null) {
-            return pathFixer(selectedFile.getPath());
+            return selectedFile.getPath();
         } else {
             return null;
         }
     }
 
-    public static String pathFixer (String inputPath) {
-        String outputPath = inputPath;
-        outputPath = "file:" + outputPath.replace("\\", "/");
-        return outputPath;
-    }
+
 }
