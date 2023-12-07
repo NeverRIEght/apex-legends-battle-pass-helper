@@ -12,10 +12,35 @@ public class DBUtil {
         dbUrlBuilder.append(File.separator);
         dbUrlBuilder.append("apexlegendsbphelper");
 
-        Connection conn = DriverManager.getConnection(dbUrlBuilder.toString(), "sa", "");
+        Connection dbConnection = DriverManager.getConnection(dbUrlBuilder.toString(), "sa", "");
 
         // add application code here
+        Statement stmt = dbConnection.createStatement();
 
-        conn.close();
+        String query1 =
+                "DROP TABLE IF EXISTS Quests; " +
+                "CREATE TABLE Quests" +
+                "(" +
+                    "questID INTEGER UNIQUE not NULL, " +
+                    "weekNumber TINYINT NOT NULL CHECK (weekNumber > 0 AND weekNumber <= 12), " +
+                    "questNameBR VARCHAR(255) NOT NULL, " +
+                    "questNameNBR VARCHAR(255), " +
+                    "isCompleted BOOLEAN, " +
+                    "questReward TINYINT CHECK (questReward > 0 AND questReward <= 10), " +
+                    "PRIMARY KEY (questID)" +
+                ")";
+        String query2 =
+                "INSERT INTO Quests (questID, weekNumber, questNameBR, questNameNBR, isCompleted, questReward)" +
+                "VALUES" +
+                "(1, 5, 'Поиск сокровищ', 'Treasure Hunt', true, 8)," +
+                "(2, 9, 'Спасение затонувшего корабля', 'Rescue Sunken Ship', false, 5)," +
+                "(3, 3, 'Путешествие в древний лес', 'Journey to Ancient Forest', true, 10);";
+
+        //String querry = "DROP TABLE Quests";
+
+        stmt.executeUpdate(query1);
+        stmt.executeUpdate(query2);
+
+        dbConnection.close();
     }
 }
