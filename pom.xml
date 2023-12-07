@@ -60,6 +60,13 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/slf4j-simple-2.0.9.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>org.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.224</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/h2/bin/h2-2.2.224.jar</systemPath>
+    </dependency>
   </dependencies>
 
   <build>
