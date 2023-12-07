@@ -6,17 +6,19 @@ public class DBUtil {
     public static void main(String[] a) throws Exception {
         wipeDB();
         createDB();
-        Connection dbConnection = openDBConnection();
-        Statement stmt = dbConnection.createStatement();
-        String query =
-                "INSERT INTO Quests (questID, weekNumber, questNameBR, questNameNBR, isCompleted, questReward)" +
-                        "VALUES" +
-                        "(1, 5, 'Поиск сокровищ', 'Treasure Hunt', true, 8)," +
-                        "(2, 8, 'Спасение затонувшего корабля', 'Rescue Sunken Ship', false, 5)," +
-                        "(3, 3, 'Путешествие в древний лес', 'Journey to Ancient Forest', true, 10);";
+//        Connection dbConnection = openDBConnection();
+//        Statement stmt = dbConnection.createStatement();
+//        String query =
+//                "INSERT INTO Quests (questID, weekNumber, questNameBR, questNameNBR, isCompleted, questReward)" +
+//                        "VALUES" +
+//                        "(1, 5, 'Поиск сокровищ', 'Treasure Hunt', true, 8)," +
+//                        "(2, 8, 'Спасение затонувшего корабля', 'Rescue Sunken Ship', false, 5)," +
+//                        "(3, 3, 'Путешествие в древний лес', 'Journey to Ancient Forest', true, 10);";
+//
+//        stmt.executeUpdate(query);
+//        closeDBConnection(dbConnection);
 
-        stmt.executeUpdate(query);
-        closeDBConnection(dbConnection);
+        addQuestToDB(new Quest("Поиск сокровищ", "Treasure Hunt", "Completed", "8", 1));
     }
 
     public static Connection openDBConnection() throws SQLException {
@@ -29,8 +31,7 @@ public class DBUtil {
         dbUrlBuilder.append("apexlegendsbphelper");
 
         try {
-            Connection dbConnection = DriverManager.getConnection(dbUrlBuilder.toString(), "sa", "");
-            return dbConnection;
+            return DriverManager.getConnection(dbUrlBuilder.toString(), "sa", "");
         } catch (SQLException e) {
             System.out.println("Error while opening DB connection: " + e.getMessage());
             throw e;
@@ -52,7 +53,7 @@ public class DBUtil {
             String query =
                     "CREATE TABLE IF NOT EXISTS Quests" +
                     "(" +
-                    "questID INTEGER UNIQUE not NULL, " +
+                    "questID BIGINT AUTO_INCREMENT UNIQUE not NULL, " +
                     "weekNumber TINYINT NOT NULL CHECK (weekNumber > 0 AND weekNumber <= 12), " +
                     "questNameBR VARCHAR(255) NOT NULL, " +
                     "questNameNBR VARCHAR(255), " +
@@ -83,7 +84,27 @@ public class DBUtil {
             throw e;
         }
     }
-//    public static void addQuestToDB(Quest inputQuest) {
-//
-//    }
+    public static void addQuestToDB(Quest inputQuest) throws SQLException {
+        try {
+            Connection dbConnection = openDBConnection();
+            String questnameNBRString = inputQuest.getQuestNameNBR() != null ? inputQuest.getQuestNameNBR() : "";
+
+            String query = "INSERT INTO Quests (weekNumber, questNameBR, questNameNBR, isCompleted, questReward) VALUES (?, ?, ?, ?, ?)";
+
+            try (PreparedStatement preparedStatement = dbConnection.prepareStatement(query)) {
+                preparedStatement.setInt(1, inputQuest.getWeekNumber());
+                preparedStatement.setString(2, inputQuest.getQuestNameBR());
+                preparedStatement.setString(3, questnameNBRString);
+                preparedStatement.setBoolean(4, inputQuest.isCompleted());
+                preparedStatement.setInt(5, inputQuest.getQuestReward());
+
+                preparedStatement.executeUpdate();
+            }
+
+            closeDBConnection(dbConnection);
+        } catch (SQLException e) {
+            System.out.println("Error while adding quest to DB: " + e.getMessage());
+            throw e;
+        }
+    }
 }
