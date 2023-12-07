@@ -5,6 +5,7 @@ module com.apexlegendsbphelper.apexlegendsbattlepasshelper {
     requires org.controlsfx.controls;
     requires java.desktop;
     requires tess4j;
+    requires java.sql;
 
     opens org.apexlegendsbphelper to javafx.fxml;
     exports org.apexlegendsbphelper;
